@@ -9,6 +9,8 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
+#include "module.h"
+
 namespace tt = boost::test_tools;
 
 BOOST_AUTO_TEST_SUITE(test_rho_w)
