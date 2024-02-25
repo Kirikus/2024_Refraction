@@ -108,29 +108,55 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
                <item>
                 <property name="text">
-                 <string>без преломления</string>
+                 <string>без преломления (прямая)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>эфф.радиус 4/3</string>
+                 <string>без преломления (обратная)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>ср.знач. k</string>
+                 <string>эфф.радиус 4/3 (прямая)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>ср.зн. радиуса кривизны</string>
+                 <string>эфф.радиус 4.3 (обратная)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>числ.интегрирование</string>
+                 <string>ср.знач. k (прямая)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ср.знач. k (обратная)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ср.зн. R кривизны (прямая)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ср.зн. R кривизны (обратная)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>числ.интегрирование (прямая)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>числ.интегрирование (обратная)</string>
                 </property>
                </item>
               </widget>
