@@ -90,10 +90,16 @@
            <property name="spacing">
             <number>6</number>
            </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
            <item>
             <layout class="QVBoxLayout" name="refractionInput">
              <property name="spacing">
               <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
              </property>
              <item>
               <widget class="QComboBox" name="comboBox">
@@ -250,7 +256,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>900</width>
      <height>20</height>
     </rect>
    </property>
