@@ -21,15 +21,15 @@ class SegmentedModel : public AtmosphericModel {
     private:
         // Get linear coefficient of reduction of refractive index N by 1 m of height
         // SRC: (2.28) from citation
-        double get_dN();
+        double dN();
 
         // Get the exponential reduction constant of refractive index N
         // SRC: (2.28) from citation
-        double get_H();
+        double H();
 
         // Get the refractive index at a height of 1 km above the surface
         // SRC: (2.27) from citation
-        double get_N1();
+        double N1();
 };
 
 #endif // SEGMENTED_MODEL_H
