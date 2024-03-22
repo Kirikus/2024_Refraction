@@ -16,7 +16,7 @@ class SegmentedModel : public AtmosphericModel {
         double Ns = 324.8;
         // hs : height of the surface above the level, [m]
         double hs = 0;
-        SegmentedModel(double Ns = 324.8, double hs = 0): Ns{Ns}, hs{hs} {}
+        SegmentedModel(double Ns = 324.8, double hs = 0): Ns(Ns), hs(hs) {}
 
     private:
         // Get linear coefficient of reduction of refractive index N by 1 m of height
