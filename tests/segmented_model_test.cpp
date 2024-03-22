@@ -19,11 +19,27 @@ BOOST_AUTO_TEST_CASE(N_ground_level) {
 }
 
 BOOST_AUTO_TEST_CASE(N_2000m) {
-    BOOST_TEST(testSegmentedModel.N(2000 - 1e-6) == testSegmentedModel.N(2000 + 1e-6), tt::tolerance(1e-6));
+    BOOST_TEST(testSegmentedModel.N(1000 - 1e-6) == testSegmentedModel.N(1000 + 1e-6), tt::tolerance(1e-6));
 }
 
 BOOST_AUTO_TEST_CASE(N_10000m) {
-    BOOST_TEST(testSegmentedModel.N(10000 - 1e-6) == testSegmentedModel.N(10000 + 1e-6), tt::tolerance(1e-6));
+    BOOST_TEST(testSegmentedModel.N(9000 - 1e-6) == testSegmentedModel.N(9000 + 1e-6), tt::tolerance(1e-6));
+}
+
+void plot_Ns_line(QCustomPlot &customPlot, double Ns, QColor color){
+    const int n = 1000;
+    const double h_min = 0, h_max = 15000;
+    QVector<double> x(n), y(n);
+
+    auto graph = customPlot.addGraph();
+    graph->setPen(QPen(color));
+    testSegmentedModel = SegmentedModel(Ns, 0);
+    for (int i = 0; i < n; ++i) {
+        y[i] = h_min + i * (h_max - h_min) / (n - 1);
+        x[i] = testSegmentedModel.N(y[i]);
+    }
+    graph->setData(x, y);
+    graph->setName("Ns = " + QString::number(Ns));
 }
 
 #ifdef TEST_PLOTS
@@ -35,41 +51,9 @@ BOOST_AUTO_TEST_CASE(plot_2_32) {
 
     QCustomPlot customPlot = QCustomPlot();
 
-    customPlot.addGraph();
-    customPlot.graph(0)->setPen(QPen(Qt::blue));
-    testSegmentedModel = SegmentedModel(250, 0);
-    const int n = 1000;
-    const double h_min = 0, h_max = 15000;
-    QVector<double> x(n), y(n);
-    for (int i = 0; i < n; ++i) {
-        y[i] = h_min + i * (h_max - h_min) / (n - 1);
-        x[i] = testSegmentedModel.N(y[i]);
-    }
-    // pass data points to graphs:
-    customPlot.graph(0)->setData(x, y);
-    customPlot.graph(0)->setName("Ns = 250");
-
-    customPlot.addGraph();
-    customPlot.graph(1)->setPen(QPen(Qt::green));
-    testSegmentedModel = SegmentedModel(313, 0);
-    for (int i = 0; i < n; ++i) {
-        y[i] = h_min + i * (h_max - h_min) / (n - 1);
-        x[i] = testSegmentedModel.N(y[i]);
-    }
-    // pass data points to graphs:
-    customPlot.graph(1)->setData(x, y);
-    customPlot.graph(1)->setName("Ns = 313");
-
-    customPlot.addGraph();
-    customPlot.graph(2)->setPen(QPen(Qt::red));
-    testSegmentedModel = SegmentedModel(400, 0);
-    for (int i = 0; i < n; ++i) {
-        y[i] = h_min + i * (h_max - h_min) / (n - 1);
-        x[i] = testSegmentedModel.N(y[i]);
-    }
-    // pass data points to graphs:
-    customPlot.graph(2)->setData(x, y);
-    customPlot.graph(2)->setName("Ns = 400");
+    plot_Ns_line(customPlot, 250, Qt::blue);
+    plot_Ns_line(customPlot, 313, Qt::green);
+    plot_Ns_line(customPlot, 400, Qt::red);
 
     // add subgrid
     customPlot.xAxis->grid()->setSubGridVisible(true);
@@ -84,8 +68,7 @@ BOOST_AUTO_TEST_CASE(plot_2_32) {
     // Note: we could have also just called customPlot->rescaleAxes(); instead
     // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select
     // graphs by clicking:
-    customPlot.setInteractions(QCP::iRangeDrag | QCP::iRangeZoom |
-                               QCP::iSelectPlottables);
+    customPlot.setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
     customPlot.legend->setVisible(true);
     customPlot.show();
