@@ -4,33 +4,38 @@
 #ifndef REFRACTIONMODEL_H
 #define REFRACTIONMODEL_H
 
-
+struct calculate_answer{
+    float psi_d;
+    float psi_g;
+    float d;
+    calculate_answer(float _psi_d , float _psi_g, float _d): psi_d(_psi_d), psi_g(_psi_g), d(_d) {};
+};
 
 class RefractionModel{
 public:
-    virtual std::vector<float> calculate(float h_a, float h_s, float R) = 0;
-    std::vector<float> reverse(float hs_a, float psi_d, float R);
+    virtual calculate_answer calculate(float h_a, float h_s, float R) = 0;
+    float reverse(float hs_a, float psi_d, float R);
 };
 
 class GeometricLine : public RefractionModel{
 public:
-    std::vector<float> calculate(float h_a, float h_s, float R) override;
+    calculate_answer calculate(float h_a, float h_s, float R) override;
 };
 
 class GeometricRound : public RefractionModel{
 public:
-    virtual std::vector<float> calculate(float h_a, float h_s, float R) = 0;
+    virtual calculate_answer calculate(float h_a, float h_s, float R) = 0;
 };
 
 class EffectiveRadius : public GeometricRound{
 public:
-    std::vector<float> calculate(float h_a, float h_s, float R) override;
+    calculate_answer calculate(float h_a, float h_s, float R) override;
     virtual float k() = 0;
 };
 
 class FourThirds : public EffectiveRadius{
 public:
-    float k() override;
+    float k() override { return 4/3;};
 };
 
 class AverageP : public EffectiveRadius{
