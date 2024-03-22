@@ -1,4 +1,5 @@
 #include "segmented_model.h"
+#include <limits>
 
 double SegmentedModel::N(double h) {
     if (hs <= h && h <= hs + 1000) {
@@ -10,7 +11,7 @@ double SegmentedModel::N(double h) {
     if (h > 9000) {
         return 105 * exp(-(h - 9000) / 7023);
     }
-    return std::nan("");
+    return std::numeric_limits<double>::quiet_NaN();
 }
 
 double SegmentedModel::dN() {
