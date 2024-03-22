@@ -10,7 +10,7 @@ double SegmentedModel::N(double h) {
     if (h > 9000) {
         return 105 * exp(-(h - 9000) / 7023);
     }
-    return 0;
+    return std::nan("");
 }
 
 double SegmentedModel::dN() {
