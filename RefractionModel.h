@@ -33,4 +33,28 @@ public:
     float k() override;
 };
 
+class AverageP : public EffectiveRadius{
+public:
+    float k() override;
+    //atmosphere
+};
+
+class AverageK : public EffectiveRadius{
+public:
+    float k() override;
+    //atmosphere
+};
+
+class AveragePAnalytical : public EffectiveRadius{
+public:
+    float k() override;
+    //atmosphere
+};
+
+class AverageKAnalytical : public EffectiveRadius{
+public:
+    float k() override;
+    //atmosphere
+};
+
 #endif // REFRACTIONMODEL_H
