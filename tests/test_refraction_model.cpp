@@ -4,8 +4,8 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-
-BOOST_AUTO_TEST_CASE(test_calculate_line) { // тест для плоской земли
+// тест для плоской земли
+BOOST_AUTO_TEST_CASE(test_calculate_line) {
     //first testing
     {GeometricLine line;
 
@@ -60,7 +60,8 @@ BOOST_AUTO_TEST_CASE(test_calculate_line) { // тест для плоской з
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_calculate_Round) { // тест с учетом коэф. преломления = 4/3 вызовом FourThird
+// тест с учетом коэф. преломления = 4/3 вызовом FourThird
+BOOST_AUTO_TEST_CASE(test_calculate_Round) {
     //first testing
     {
     RefractionModel* modelPtr;
