@@ -39,7 +39,7 @@
         </property>
         <widget class="QTabWidget" name="TabWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="DirectProblem">
           <attribute name="title">
@@ -619,7 +619,7 @@
                    </widget>
                   </item>
                   <item row="3" column="1">
-                   <widget class="QLineEdit" name="lineEdit_32">
+                   <widget class="QLineEdit" name="line_Hlayer_unite">
                     <property name="placeholderText">
                      <string>метров</string>
                     </property>
@@ -639,7 +639,7 @@
                    </spacer>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_30"/>
+                   <widget class="QLineEdit" name="line_Ns_unite"/>
                   </item>
                   <item row="2" column="0">
                    <widget class="QLabel" name="h_b">
@@ -672,10 +672,10 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_34"/>
+                   <widget class="QLineEdit" name="line_Nb_unite"/>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QLineEdit" name="lineEdit_33">
+                   <widget class="QLineEdit" name="line_Hb_unite">
                     <property name="placeholderText">
                      <string>метров</string>
                     </property>
@@ -727,7 +727,7 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_36"/>
+                   <widget class="QLineEdit" name="line_N1_segm"/>
                   </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="N_s_8">
@@ -740,7 +740,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_35"/>
+                   <widget class="QLineEdit" name="line_Ns_segm"/>
                   </item>
                   <item row="2" column="1">
                    <spacer name="verticalSpacer_14">
@@ -923,7 +923,7 @@
                      <number>10</number>
                     </property>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_117">
+                     <widget class="QLineEdit" name="line_r_norefr_rev">
                       <property name="placeholderText">
                        <string>метров</string>
                       </property>
@@ -992,7 +992,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_120">
+                     <widget class="QLineEdit" name="line_r_43_rev">
                       <property name="placeholderText">
                        <string> метров</string>
                       </property>
@@ -1041,7 +1041,7 @@
                      <number>10</number>
                     </property>
                     <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_124">
+                     <widget class="QLineEdit" name="line_r_k_rev">
                       <property name="placeholderText">
                        <string> метров</string>
                       </property>
@@ -1058,7 +1058,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_125"/>
+                     <widget class="QLineEdit" name="line_Ns_k_rev"/>
                     </item>
                     <item row="0" column="0">
                      <widget class="QLabel" name="N_s_32">
@@ -1146,10 +1146,10 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_129"/>
+                     <widget class="QLineEdit" name="line_Ns_rad_rev"/>
                     </item>
                     <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_130">
+                     <widget class="QLineEdit" name="line_r_rad_rev">
                       <property name="placeholderText">
                        <string>метров</string>
                       </property>
@@ -1185,7 +1185,7 @@
                      <number>10</number>
                     </property>
                     <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_134">
+                     <widget class="QLineEdit" name="line_r_integr_rev">
                       <property name="placeholderText">
                        <string>метров</string>
                       </property>
@@ -1202,13 +1202,13 @@
                      </widget>
                     </item>
                     <item row="2" column="1">
-                     <widget class="QLineEdit" name="lineEdit_135"/>
+                     <widget class="QLineEdit" name="line_delta_psi_g_integr_rev"/>
                     </item>
                     <item row="3" column="1">
-                     <widget class="QLineEdit" name="lineEdit_136"/>
+                     <widget class="QLineEdit" name="line_mu_integr_rev"/>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_137"/>
+                     <widget class="QLineEdit" name="line_Ns_integr_rev"/>
                     </item>
                     <item row="4" column="0">
                      <spacer name="verticalSpacer_60">
@@ -1344,7 +1344,7 @@
                      </widget>
                     </item>
                     <item row="3" column="1">
-                     <widget class="QLineEdit" name="lineEdit_138">
+                     <widget class="QLineEdit" name="line_Hlayer_unite_rev">
                       <property name="placeholderText">
                        <string>метров</string>
                       </property>
@@ -1364,7 +1364,7 @@
                      </spacer>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_139"/>
+                     <widget class="QLineEdit" name="line_Ns_unite_rev"/>
                     </item>
                     <item row="2" column="0">
                      <widget class="QLabel" name="h_b_4">
@@ -1397,10 +1397,10 @@
                      </widget>
                     </item>
                     <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_140"/>
+                     <widget class="QLineEdit" name="line_Nb_unite_rev"/>
                     </item>
                     <item row="2" column="1">
-                     <widget class="QLineEdit" name="lineEdit_141">
+                     <widget class="QLineEdit" name="line_Hb_unite_rev">
                       <property name="placeholderText">
                        <string>метров</string>
                       </property>
@@ -1452,7 +1452,7 @@
                      </widget>
                     </item>
                     <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_142"/>
+                     <widget class="QLineEdit" name="line_N1_segm_rev"/>
                     </item>
                     <item row="0" column="0">
                      <widget class="QLabel" name="N_s_38">
@@ -1465,7 +1465,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_143"/>
+                     <widget class="QLineEdit" name="line_Ns_segm_rev"/>
                     </item>
                     <item row="2" column="1">
                      <spacer name="verticalSpacer_62">
@@ -1569,7 +1569,7 @@
            <number>6</number>
           </property>
           <item row="2" column="3">
-           <widget class="QLineEdit" name="lineEdit_37">
+           <widget class="QLineEdit" name="line_hs_common">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1582,7 +1582,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit_39">
+           <widget class="QLineEdit" name="line_rad_earth_common">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1598,7 +1598,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEdit_40">
+           <widget class="QLineEdit" name="line_stepintegr_common">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1656,7 +1656,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QLineEdit" name="lineEdit_38">
+           <widget class="QLineEdit" name="line_Ha_common">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1850,8 +1850,29 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuRun">
+    <property name="title">
+     <string>Run</string>
+    </property>
+    <addaction name="action"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuRun"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action">
+   <property name="text">
+    <string>Расчёт</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
