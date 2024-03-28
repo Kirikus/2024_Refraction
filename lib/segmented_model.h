@@ -2,7 +2,6 @@
 #define SEGMENTED_MODEL_H
 
 #include "atmospheric_model.h"
-#include <cmath>
 
 class SegmentedModel : public AtmosphericModel {
     public:

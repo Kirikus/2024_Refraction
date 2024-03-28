@@ -1,6 +1,8 @@
 #ifndef ATMOSPHERIC_MODEL_H
 #define ATMOSPHERIC_MODEL_H
 
+#include <cmath>
+
 class AtmosphericModel {
     public:
         // The dependence of the refractive index on height
