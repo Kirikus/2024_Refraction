@@ -30,7 +30,7 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
 
     return calculate_answer(psi_d, psi_g, d);
 }
-
+/*
 void AverageKAnalytical::SetAtmosphere(){
     ExponentialModel model;
     atmosphere = model;
@@ -56,7 +56,7 @@ float AverageP::k(float h_a, float h_s, float R){
     float k_ = 1 / ( 1 - (R_e/ p));
     return k_;
 }
-*/
+
 
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
@@ -79,5 +79,5 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     return k_avg;
 }
 
-
+*/
 

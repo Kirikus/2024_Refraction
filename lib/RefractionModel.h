@@ -40,7 +40,7 @@ public:
     float k() override { return 4/3;};
 };
 
-
+/*
 class AveragePAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R); // override ?
@@ -57,7 +57,7 @@ private:
     ExponentialModel atmosphere;
 };
 
-/*
+
 // will be done in future commits
 class AverageK : public EffectiveRadius{
 public:
