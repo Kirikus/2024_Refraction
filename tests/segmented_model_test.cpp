@@ -15,7 +15,7 @@ SegmentedModel testSegmentedModel;
 BOOST_AUTO_TEST_SUITE(test_N)
 
 BOOST_AUTO_TEST_CASE(N_ground_level) {
-    BOOST_TEST(testSegmentedModel.N(0) == testSegmentedModel.Ns, tt::tolerance(1e-6));
+    BOOST_TEST(testSegmentedModel.N(0) == 324.8, tt::tolerance(1e-6));
 }
 
 BOOST_AUTO_TEST_CASE(N_2000m) {
