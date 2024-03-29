@@ -16,8 +16,8 @@ class SegmentedModel : public AtmosphericModel {
         SegmentedModel(double Ns = 324.8, double hs = 0): Ns(Ns), hs(hs) {}
 
     private:
-        double Ns = 324.8;
-        double hs = 0;
+        double Ns;
+        double hs;
 
         // Get linear coefficient of reduction of refractive index N by 1 m of height
         // SRC: (2.28) from citation
