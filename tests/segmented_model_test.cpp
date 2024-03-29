@@ -12,17 +12,17 @@ namespace tt = boost::test_tools;
 
 SegmentedModel testSegmentedModel;
 
-BOOST_AUTO_TEST_SUITE(test_N)
+BOOST_AUTO_TEST_SUITE(test_N_segmented)
 
 BOOST_AUTO_TEST_CASE(N_ground_level) {
     BOOST_TEST(testSegmentedModel.N(0) == 324.8, tt::tolerance(1e-6));
 }
 
-BOOST_AUTO_TEST_CASE(N_2000m) {
+BOOST_AUTO_TEST_CASE(N_1000m) {
     BOOST_TEST(testSegmentedModel.N(1000 - 1e-6) == testSegmentedModel.N(1000 + 1e-6), tt::tolerance(1e-6));
 }
 
-BOOST_AUTO_TEST_CASE(N_10000m) {
+BOOST_AUTO_TEST_CASE(N_9000m) {
     BOOST_TEST(testSegmentedModel.N(9000 - 1e-6) == testSegmentedModel.N(9000 + 1e-6), tt::tolerance(1e-6));
 }
 
