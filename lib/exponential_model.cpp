@@ -1,5 +1,4 @@
 #include "exponential_model.h"
-#include <limits>
 
 double ExponentialModel::N(double h) {
     return Ns * exp(-(h - hs) / Hb());
