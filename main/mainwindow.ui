@@ -187,7 +187,7 @@
                </size>
               </property>
               <property name="currentIndex">
-               <number>2</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="unite_model">
                <property name="sizePolicy">
@@ -1296,13 +1296,13 @@
     <property name="title">
      <string>Run</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="action_run_calculate"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuRun"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="action_run_calculate">
    <property name="text">
     <string>Расчёт</string>
    </property>
