@@ -4,7 +4,8 @@
 #ifndef REFRACTIONMODEL_H
 #define REFRACTIONMODEL_H
 
-#include "segmented_model.h" // in future it will re-incldue by exponential_model
+#include "segmented_model.h"
+#include "exponential_model.h"
 
 struct calculate_answer{
     float psi_d;
@@ -32,49 +33,39 @@ public:
 class EffectiveRadius : public GeometricRound{
 public:
     calculate_answer calculate(float h_a, float h_s, float R) override;
-    virtual float k() = 0;
+    virtual float k(float h_a, float h_s, float R) = 0;
 };
 
 class FourThirds : public EffectiveRadius{
 public:
-    float k() override { return 4/3;};
+    float k(float h_a, float h_s, float R) override { return 4/3;};
 };
 
 
 class AveragePAnalytical : public EffectiveRadius{
 public:
-    float k(float h_a, float h_s, float R); // override ?
-    void SetAtmosphere();
+    float k(float h_a, float h_s, float R) override;
+    void SetAtmosphere(ExponentialModel model);
 private:
     ExponentialModel atmosphere;
 };
 
 class AverageKAnalytical : public EffectiveRadius{
 public:
-    float k(float h_a, float h_s, float R); // override ?
-    void SetAtmosphere();
+    float k(float h_a, float h_s, float R) override;
+    void SetAtmosphere(ExponentialModel model);
 private:
     ExponentialModel atmosphere;
-};
-
-/*
-// will be done in future commits
-class AverageK : public EffectiveRadius{
-public:
-    float k() override;
-    void SetAtmosphere(SegmentedModel atmosphere);
-private:
-    SegmentedModel atmosphere;
 };
 
 class AverageP : public EffectiveRadius{
 public:
-    float k(float h_a, float h_s, float R); // override ?
-    void SetAtmosphere();
+    float k(float h_a, float h_s, float R) override;
+    void SetAtmosphere(ExponentialModel model);
 private:
     ExponentialModel atmosphere;
 };
 
-*/
+
 
 #endif // REFRACTIONMODEL_H
