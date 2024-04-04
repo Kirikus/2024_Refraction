@@ -18,7 +18,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost REQUIRED COMPONENTS locale unit_test_framework)
 
 add_subdirectory(lib)
-#add_subdirectory(tests)
+add_subdirectory(tests)
 add_subdirectory(main)
 
-#target_include_directories(tests PUBLIC lib)
+target_include_directories(tests PUBLIC lib)

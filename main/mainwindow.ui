@@ -31,7 +31,11 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <widget class="QWidget" name="layoutWidget">
-        <layout class="QVBoxLayout" name="graphArea"/>
+        <layout class="QVBoxLayout" name="graphArea">
+         <item>
+          <widget class="QCustomPlot" name="widget" native="true"/>
+         </item>
+        </layout>
        </widget>
        <widget class="QTabWidget" name="TabWidget">
         <property name="currentIndex">
@@ -1311,6 +1315,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

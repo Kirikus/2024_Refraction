@@ -1,10 +1,11 @@
-#define BOOST_TEST_MODULE MyTest
+//#define BOOST_TEST_MODULE MyTest
 
 #include "RefractionModel.cpp"
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 // тест для плоской земли
+BOOST_AUTO_TEST_SUITE(test_segmented)
 BOOST_AUTO_TEST_CASE(test_calculate_line) {
     //first testing
     {GeometricLine line;
@@ -135,4 +136,4 @@ BOOST_AUTO_TEST_CASE(test_calculate_Round) {
     BOOST_TEST(std::isnan(result.d));
     }
 }
-
+BOOST_AUTO_TEST_SUITE_END();
