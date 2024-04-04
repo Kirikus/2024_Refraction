@@ -4,10 +4,13 @@
 const int R_e = 6371000; //exemplary radius of the Earth
 
 
-
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
+    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
+
     float term1 = h_a / R;
     float term2 = 1 - h_a / (2 * (R_e + h_a));
     float term3 = R / (2 * (R_e + h_a));
@@ -26,7 +29,9 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    // all formulas were taken from the manual pages 38-39
+    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
     float k_ = k(h_a, h_s, R);
     //formulas 2.12
     float term_h_a_R = h_a / R;
@@ -60,6 +65,9 @@ void AverageP::SetAtmosphere(ExponentialModel model){
 }
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
+    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
     //formula 2.9
     float term1 = h_a / R;
     float term2 = 1 + h_a / (2 * R_e);
@@ -80,6 +88,9 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
 }
 
 float AveragePAnalytical::k(float h_a, float h_s, float R){
+    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
     //formula 2.9
     float term1 = h_a / R;
     float term2 = 1 + h_a / (2 * R_e);

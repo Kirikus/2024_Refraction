@@ -4,8 +4,8 @@
 #ifndef REFRACTIONMODEL_H
 #define REFRACTIONMODEL_H
 
-#include "segmented_model.h"
-#include "exponential_model.h"
+#include "segmented_model.cpp"
+#include "exponential_model.cpp"
 
 struct calculate_answer{
     float psi_d;
