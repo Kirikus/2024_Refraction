@@ -6,7 +6,7 @@
 
 BOOST_AUTO_TEST_SUITE(test_geometric_line)
 
-BOOST_AUTO_TEST_CASE(test_avarage_numbers) {
+BOOST_AUTO_TEST_CASE(return_correct_answer) {
 
     GeometricLine line;
 
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(test_avarage_numbers) {
     BOOST_CHECK_CLOSE(result.d, 62.1826, 0.0001);
 }
 
-BOOST_AUTO_TEST_CASE(test_nuls){
+BOOST_AUTO_TEST_CASE(throw_error_of_test_nulls){
 
     GeometricLine line;
 
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(test_nuls){
     BOOST_CHECK_THROW(line.calculate(h_a, h_s, R), std::runtime_error);
     }
 
-BOOST_AUTO_TEST_CASE(test_negative_numbers){
+BOOST_AUTO_TEST_CASE(throw_error_of_negative_numbers){
     GeometricLine line;
 
     float h_a = -8;
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(test_negative_numbers){
 
     }
 
-BOOST_AUTO_TEST_CASE(test_big_and_little_numbers){
+BOOST_AUTO_TEST_CASE(return_nan_of_big_numbers){
     GeometricLine line;
 
     float h_a = 1e6;
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // all next tests using the round model
 BOOST_AUTO_TEST_SUITE(test_k_four_thirds)
 
-BOOST_AUTO_TEST_CASE(test_avarage_numbers) {
+BOOST_AUTO_TEST_CASE(return_correct_answer) {
 
     FourThirds el;
     float h_a = 10.0;
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(test_avarage_numbers) {
     BOOST_CHECK_CLOSE(result.d, 17.4681, 0.0001);
     }
 
-BOOST_AUTO_TEST_CASE(test_nuls){
+BOOST_AUTO_TEST_CASE(throw_error_from_nulls){
 
     FourThirds el;
 
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_nuls){
     BOOST_CHECK_THROW(el.calculate(h_a, h_s, R), std::runtime_error);
     }
 
-BOOST_AUTO_TEST_CASE(test_negative_numbers){
+BOOST_AUTO_TEST_CASE(throw_error_of_negative_numbers){
 
     FourThirds el;
 
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(test_negative_numbers){
     BOOST_CHECK_THROW(el.calculate(h_a, h_s, R), std::runtime_error);
     }
 
-BOOST_AUTO_TEST_CASE(test_big_numbers){
+BOOST_AUTO_TEST_CASE(return_nan_of_big_numbers){
 
     FourThirds el;
     float h_a = 1e6;
