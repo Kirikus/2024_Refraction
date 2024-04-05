@@ -7,7 +7,7 @@ const int R_e = 6371000; //exemplary radius of the Earth
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
-    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
 
@@ -29,7 +29,7 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     float k_ = k(h_a, h_s, R);
@@ -52,20 +52,20 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
     return calculate_answer(psi_d, psi_g, d);
 }
 
-void AverageKAnalytical::SetAtmosphere(ExponentialModel model){
+void AverageKAnalytical::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
 
-void AveragePAnalytical::SetAtmosphere(ExponentialModel model){
+void AveragePAnalytical::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
 
-void AverageP::SetAtmosphere(ExponentialModel model){
+void AverageP::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     //formula 2.9
@@ -76,7 +76,7 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
 
     //formula 2.38
     double H_b = atmosphere.Hb(); //Hb
-    double N_s = atmosphere.N(1000); //Ns // затычка для h, вопрос по использованию так как в
+    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     double term4 = H_b / (h_a - h_s);
     double term4_5 = ((pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b);
     double term5 = exp((h_a - h_s) / H_b) - term4_5;
@@ -98,7 +98,7 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     float psi_g = asin(term1 * term2 - term3);
 
     double H_b = atmosphere.Hb(); //Hb
-    double N_s = atmosphere.N(1000); //Ns // затычка для h, вопрос по использованию так как в
+    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     //formula 2.39
     float term4 = H_b / (pow(10, -6) * N_s * cos(psi_g));
     float term5 = exp((h_a - h_s) / H_b) - 1;

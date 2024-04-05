@@ -4,8 +4,8 @@
 #ifndef REFRACTIONMODEL_H
 #define REFRACTIONMODEL_H
 
-#include "segmented_model.cpp"
-#include "exponential_model.cpp"
+#include "segmented_model.h"
+#include "exponential_model.h"
 
 struct calculate_answer{
     float psi_d;
@@ -45,7 +45,7 @@ public:
 class AveragePAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
-    void SetAtmosphere(ExponentialModel model);
+    void SetAtmosphere(const ExponentialModel &model);
 private:
     ExponentialModel atmosphere;
 };
@@ -53,7 +53,7 @@ private:
 class AverageKAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
-    void SetAtmosphere(ExponentialModel model);
+    void SetAtmosphere(const ExponentialModel &model);
 private:
     ExponentialModel atmosphere;
 };
@@ -61,7 +61,7 @@ private:
 class AverageP : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
-    void SetAtmosphere(ExponentialModel model);
+    void SetAtmosphere(const ExponentialModel &model);
 private:
     ExponentialModel atmosphere;
 };
