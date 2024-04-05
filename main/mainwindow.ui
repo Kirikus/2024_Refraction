@@ -33,13 +33,13 @@
        <widget class="QWidget" name="layoutWidget">
         <layout class="QVBoxLayout" name="graphArea">
          <item>
-          <widget class="QCustomPlot" name="widget" native="true"/>
+          <widget class="QCustomPlot" name="graph" native="true"/>
          </item>
         </layout>
        </widget>
        <widget class="QTabWidget" name="TabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="DirectProblem">
          <attribute name="title">
@@ -1066,22 +1066,6 @@
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="h_a">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>высота РЛС</string>
-             </property>
-             <property name="text">
-              <string> h_a</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
             <widget class="QLabel" name="h_s">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -1094,6 +1078,22 @@
              </property>
              <property name="text">
               <string> h_s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="h_a">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>высота РЛС</string>
+             </property>
+             <property name="text">
+              <string> h_a</string>
              </property>
             </widget>
            </item>
