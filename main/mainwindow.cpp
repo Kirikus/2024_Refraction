@@ -15,11 +15,14 @@ void setValidators(Ui::MainWindow *ui)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  this->resize(900, this->height());
 
   setValidators(ui);
 
   connect(ui->main_launch_button, &QPushButton::clicked, this, &MainWindow::launchCalculation);
   connect(ui->action_run_calculate, &QAction::triggered, this, &MainWindow::launchCalculation);
+
+  ui->graph->hide();
 }
 
 void MainWindow::extractDataFromGui()
@@ -82,12 +85,8 @@ void MainWindow::loggingDataFromGui()
 };
 
 
-void MainWindow::launchCalculation()
+void MainWindow::drawGraph()
 {
-    extractDataFromGui();
-    loggingDataFromGui();
-
-
     // Получаем указатель на QCustomPlot
     QCustomPlot *customPlot = ui->graph;
 
@@ -125,6 +124,16 @@ void MainWindow::launchCalculation()
     // Перерисовываем график
     customPlot->replot();
 
+    customPlot->setVisible(true);
+    customPlot->resize(80, customPlot->height());
+}
+
+
+void MainWindow::launchCalculation()
+{
+    extractDataFromGui();
+    loggingDataFromGui();
+    drawGraph();
 
 };
 

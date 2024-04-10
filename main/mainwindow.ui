@@ -441,7 +441,7 @@
                   <number>10</number>
                  </property>
                  <item row="0" column="1">
-                  <widget class="QPushButton" name="file_gialog_button_gost">
+                  <widget class="QPushButton" name="file_dialog_button_gost">
                    <property name="text">
                     <string>Открыть</string>
                    </property>

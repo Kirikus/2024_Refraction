@@ -47,5 +47,6 @@ class MainWindow : public QMainWindow {
 
   void extractDataFromGui();
   void loggingDataFromGui();
+  void drawGraph();
 };
 #endif  // MAINWINDOW_H
