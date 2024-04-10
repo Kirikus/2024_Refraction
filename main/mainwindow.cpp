@@ -11,7 +11,6 @@ void setValidators(Ui::MainWindow *ui)
 };
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
@@ -21,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(ui->main_launch_button, &QPushButton::clicked, this, &MainWindow::launchCalculation);
   connect(ui->action_run_calculate, &QAction::triggered, this, &MainWindow::launchCalculation);
+  connect(ui->file_dialog_button_gost, &QPushButton::clicked, this, &MainWindow::stateStandartHandler);
+  connect(ui->file_gialog_button_gost_4, &QPushButton::clicked, this, &MainWindow::stateStandartHandlerRev);
 
   ui->graph->hide();
 }
@@ -135,6 +136,66 @@ void MainWindow::launchCalculation()
     loggingDataFromGui();
     drawGraph();
 
+};
+
+
+void MainWindow::fillFromFile(const QString &filename, stateStandartModelData &data)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "Error opening file" << filename;
+        ui->VerdictLine->setText("Error opening file");
+        return;
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        QStringList values = line.split(",");
+
+        if (values.size() == 3)
+        {
+            data.Heights.push_back(values[0].toDouble());
+            data.Pressures.push_back(values[1].toDouble());
+            data.Temperatures.push_back(values[2].toDouble());
+        }
+        else
+        {
+            qDebug() << "Invalid format in file" << filename;
+            ui->VerdictLine->setText("Invalid form in file");
+            return;
+        }
+    }
+
+    file.close();
+}
+
+void MainWindow::stateStandartHandler()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Table"), "/home/", tr("Text Files (*.txt *.csv *.xlsx, *.odf)"));
+    ui->LogText->append("Direct task state standart model file: "+ fileName);
+    ui->file_dialog_gost->setText(fileName);
+    fillFromFile(fileName, ssm_direct);
+    ui->LogText->append("first line of direct file: "
+                      + QString::number(ssm_direct.Heights[0]) + ", "
+                      + QString::number(ssm_direct.Pressures[0]) + ", "
+                      + QString::number(ssm_direct.Temperatures[0]));
+};
+
+void MainWindow::stateStandartHandlerRev()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Table"), "/home/", tr("Text Files (*.txt *.csv *.xlsx, *.odf)"));
+    ui->LogText->append("Reversed task state standart model file: "+ fileName);
+    ui->file_dialog_gost_4->setText(fileName);
+    fillFromFile(fileName, ssm_reversed);
+    ui->LogText->append("first line of reversed file: "
+                      + QString::number(ssm_reversed.Heights[0]) + ", "
+                      + QString::number(ssm_reversed.Pressures[0]) + ", "
+                      + QString::number(ssm_reversed.Temperatures[0]));
 };
 
 

@@ -2,6 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+
+
+struct stateStandartModelData
+{
+    std::vector<double> Heights;
+    std::vector<double> Pressures;
+    std::vector<double> Temperatures;
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,6 +29,8 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void launchCalculation();
+  void stateStandartHandler();
+  void stateStandartHandlerRev();
 
  private:
   Ui::MainWindow *ui;
@@ -45,8 +58,13 @@ class MainWindow : public QMainWindow {
   QString atmosphere_model;
   QString atmosphere_model_reverse;
 
+  stateStandartModelData ssm_direct;
+  stateStandartModelData ssm_reversed;
+
   void extractDataFromGui();
   void loggingDataFromGui();
   void drawGraph();
+  void fillFromFile(const QString &fileName, stateStandartModelData &data);
+
 };
 #endif  // MAINWINDOW_H
