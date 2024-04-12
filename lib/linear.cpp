@@ -2,7 +2,7 @@
 
 double Linear::y(double x) {
     for (int i = 0; i < points.size()-1; i++) {
-        if (x >= points[i].x && x <= points[i+1].x) {
+        if (points[i].x <= x && x <= points[i+1].x) {
             double slope = (points[i+1].y - points[i].y) / (points[i+1].x - points[i].x);
             return points[i].y + slope * (x - points[i].x);
         }
