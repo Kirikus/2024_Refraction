@@ -12,18 +12,26 @@ namespace tt = boost::test_tools;
 
 BOOST_AUTO_TEST_SUITE(test_linear_interpolation)
 
-std::vector<Point> test_data {Point(1, 3), Point(3, 5), Point(5, 7), Point(7, 9)};
+const std::vector<double> x_values = {1, 3, 5, 7};
+const std::vector<double> y_values = {3, 5, 7, 9};
+constexpr int x_min = 1;
+constexpr int x_max = 7;
+Linear testLinear = Linear(x_values, y_values);
 
 BOOST_AUTO_TEST_CASE(linear_interpolation_at_dots) {
-    Linear testLinear = Linear(test_data);
-    for (int i = 0; i < test_data.size(); ++i)
-        BOOST_TEST(testLinear.y(test_data[i].x) == test_data[i].y, tt::tolerance(1e-6));
+    for (int i = 0; i < x_values.size(); ++i)
+        BOOST_TEST(testLinear.y(x_values[i]) == y_values[i], tt::tolerance(1e-6));
 }
 
 BOOST_AUTO_TEST_CASE(linear_interpolation_between_dots) {
-    std::vector<Point> test_data {Point(0, 1), Point(2, 3)};
-    Linear testLinear = Linear(test_data);
-    BOOST_TEST(testLinear.y(1) == 2, tt::tolerance(1e-6));
+    std::vector<double> weights = {0.1, 0.3, 0.5, 0.6, 0.8};
+    for (int i = 1; i < x_values.size(); i++) {
+        for (auto w: weights) {
+            double x = w * x_values[i-1] + (1-w) * x_values[i];
+            double y = w * y_values[i-1] + (1-w) * y_values[i];
+            BOOST_TEST(testLinear.y(x) == y, tt::tolerance(1e-6));
+        }
+    }
 }
 
 #ifdef TEST_PLOTS
@@ -36,19 +44,12 @@ BOOST_AUTO_TEST_CASE(plot_linear_interpolation) {
     customPlot.addGraph();
     customPlot.graph(0)->setPen(QPen(Qt::blue));
 
-    Linear testLinear = Linear(test_data);
-    int min = 1;
-    int max = 9;
-    QVector<double> x(max), y(max);
-    for (int i = min; i < max; ++i) {
-      y[i] = testLinear.y(test_data[i].x);
-      x[i] = test_data[i].x;
+    QVector<double> xInterp, yInterp;
+    for (double x = x_min; x <= x_max; x += 0.1) {
+        xInterp.push_back(x);
+        yInterp.push_back(testLinear.y(x));
     }
 
-    // make x axis logarithmic
-    customPlot.xAxis->setScaleType(QCPAxis::stLogarithmic);
-    QSharedPointer<QCPAxisTickerLog> logTicker(new QCPAxisTickerLog);
-    customPlot.xAxis->setTicker(logTicker);
     // add subgrid
     customPlot.xAxis->grid()->setSubGridVisible(true);
     customPlot.yAxis->grid()->setSubGridVisible(true);
@@ -56,7 +57,7 @@ BOOST_AUTO_TEST_CASE(plot_linear_interpolation) {
     customPlot.xAxis->setLabel("X");
     customPlot.yAxis->setLabel("Y");
     // pass data points to graphs:
-    customPlot.graph(0)->setData(x, y);
+    customPlot.graph(0)->setData(xInterp, yInterp);
     // let the ranges scale themselves so graph 0 fits perfectly in the visible
     // area:
     customPlot.graph(0)->rescaleAxes();
