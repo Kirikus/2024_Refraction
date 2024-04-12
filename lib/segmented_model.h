@@ -2,7 +2,6 @@
 #define SEGMENTED_MODEL_H
 
 #include "atmospheric_model.h"
-#include <cmath>
 
 class SegmentedModel : public AtmosphericModel {
     public:
@@ -13,12 +12,13 @@ class SegmentedModel : public AtmosphericModel {
         virtual double N(double h) override;
 
         // Ns : refractive index at the Earth's surface, []
-        double Ns = 324.8;
         // hs : height of the surface above the level, [m]
-        double hs = 0;
         SegmentedModel(double Ns = 324.8, double hs = 0): Ns(Ns), hs(hs) {}
 
     private:
+        double Ns;
+        double hs;
+
         // Get linear coefficient of reduction of refractive index N by 1 m of height
         // SRC: (2.28) from citation
         double dN();
