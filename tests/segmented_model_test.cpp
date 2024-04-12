@@ -27,20 +27,19 @@ BOOST_AUTO_TEST_CASE(N_at_9000m_continuous) {
     BOOST_TEST(testSegmentedModel.N(9000 - 1e-6) == testSegmentedModel.N(9000 + 1e-6), tt::tolerance(1e-6));
 }
 
-SegmentedModel testSegmentedModel;
-
 void plot_Ns_line(QCustomPlot &customPlot, double Ns, QColor color){
     const int n = 1000;
     const double h_min = 0, h_max = 15000;
     QVector<double> x(n), y(n);
-
     auto graph = customPlot.addGraph();
     graph->setPen(QPen(color));
-    testSegmentedModel = SegmentedModel(Ns, 0);
+
+    SegmentedModel testSegmentedModel(Ns, 0);
     for (int i = 0; i < n; ++i) {
         y[i] = h_min + i * (h_max - h_min) / (n - 1);
         x[i] = testSegmentedModel.N(y[i]);
     }
+
     graph->setData(x, y);
     graph->setName("Ns = " + QString::number(Ns));
 }
