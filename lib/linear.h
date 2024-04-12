@@ -5,7 +5,7 @@
 
 class Linear : public Function1D {
     public:
-        Linear(std::vector<Point> points);
+        Linear(std::vector<Point> points): points(points) {}
         virtual double y(double x) override;
 
     private:
