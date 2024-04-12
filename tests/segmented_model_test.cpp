@@ -17,15 +17,17 @@ BOOST_AUTO_TEST_CASE(N_at_ground_level) {
     BOOST_TEST(testSegmentedModelGroundLevel.N(0) == 324.8, tt::tolerance(1e-6));
 }
 
-SegmentedModel testSegmentedModel;
-
 BOOST_AUTO_TEST_CASE(N_at_1000m_continuous) {
+    SegmentedModel testSegmentedModel(324.8, 0);
     BOOST_TEST(testSegmentedModel.N(1000 - 1e-6) == testSegmentedModel.N(1000 + 1e-6), tt::tolerance(1e-6));
 }
 
 BOOST_AUTO_TEST_CASE(N_at_9000m_continuous) {
+    SegmentedModel testSegmentedModel(324.8, 0);
     BOOST_TEST(testSegmentedModel.N(9000 - 1e-6) == testSegmentedModel.N(9000 + 1e-6), tt::tolerance(1e-6));
 }
+
+SegmentedModel testSegmentedModel;
 
 void plot_Ns_line(QCustomPlot &customPlot, double Ns, QColor color){
     const int n = 1000;
