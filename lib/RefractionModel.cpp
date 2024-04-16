@@ -33,21 +33,20 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     float k_ = k(h_a, h_s, R);
-    //formulas 2.12
-    float term_h_a_R = h_a / R;
-    float term_1 = 1 - h_a / (2 * (k_ * R_e + h_a));
+    //formulas 2.17
+    float term_h_a_R = (h_a - h_s) / R;
+    float term_1 = 1 - (h_a - h_s) / (2 * (k_ * R_e + h_a));
     float term_R = R / (2 * (k_ * R_e + h_a));
     float psi_d = asin(term_h_a_R * term_1 + term_R);
 
-    float term_h_a_R_2 = h_a / R;
-    float term_2 = 1 + h_a / (2 * k_ * R_e);
-    float term_R_2 = R / (2 * k_ * R_e);
+    float term_h_a_R_2 = (h_a - h_s) / R;
+    float term_2 = 1 + (h_a - h_s) / (2 * (k_ * R_e + h_s));
+    float term_R_2 = R / (2 * (k_ * R_e + h_s));
     float psi_g = asin(term_h_a_R_2 * term_2 - term_R_2);
 
-    //formula 2.14
     float ksi_e = psi_d - psi_g;
-    //formula 2.16
-    float d = k_ * R_e * ksi_e;
+    //formula 2.19
+    float d = (k_ * R_e + h_s) * ksi_e;
 
     return calculate_answer(psi_d, psi_g, d);
 }
@@ -63,6 +62,7 @@ void AveragePAnalytical::SetAtmosphere(const ExponentialModel &model){
 void AverageP::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
+
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
     if (!(h_a >0) or !(h_s >0) or !(R >0)){
@@ -108,6 +108,78 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     float k_avg = 1 / (1 - (R_e/p_avg));
     return k_avg;
 }
+/*
+reverse_answer GeometricLine::reverse(float h_a, float h_s, float R){
 
+}
+*/
+float FourThirds::reverse(float &h_a, float &h_s, float &R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    FourThirds model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
+
+float AveragePAnalytical::reverse(float &h_a, float &h_s, float &R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    AveragePAnalytical model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
+
+float AverageKAnalytical::reverse(float &h_a, float &h_s, float &R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    AveragePAnalytical model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
 
 
