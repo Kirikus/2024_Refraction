@@ -22,3 +22,4 @@ add_subdirectory(tests)
 add_subdirectory(main)
 
 target_include_directories(tests PUBLIC lib)
+target_include_directories(main PUBLIC lib)

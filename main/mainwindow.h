@@ -6,6 +6,8 @@
 #include <QTextStream>
 #include <QDebug>
 
+#include "RefractionModel.h"
+
 
 struct stateStandartModelData
 {
@@ -63,7 +65,7 @@ class MainWindow : public QMainWindow {
 
   void extractDataFromGui();
   void loggingDataFromGui();
-  void drawGraph();
+  void drawGraph(calculate_answer resultCalculation);
   void fillFromFile(const QString &fileName, stateStandartModelData &data);
 
 };
