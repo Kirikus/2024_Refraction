@@ -108,12 +108,9 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     float k_avg = 1 / (1 - (R_e/p_avg));
     return k_avg;
 }
-/*
-reverse_answer GeometricLine::reverse(float h_a, float h_s, float R){
 
-}
-*/
-float FourThirds::reverse(float &h_a, float &h_s, float &R){
+
+float FourThirds::reverse(float h_a, float h_s, float R){
     float d_h = h_s * 0.01;
     float h_s_guess = 0.9 * h_s;
     FourThirds model;
@@ -136,7 +133,7 @@ float FourThirds::reverse(float &h_a, float &h_s, float &R){
     return h_s_guess;
 }
 
-float AveragePAnalytical::reverse(float &h_a, float &h_s, float &R){
+float AveragePAnalytical::reverse(float h_a, float h_s, float R){
     float d_h = h_s * 0.01;
     float h_s_guess = 0.9 * h_s;
     AveragePAnalytical model;
@@ -159,7 +156,7 @@ float AveragePAnalytical::reverse(float &h_a, float &h_s, float &R){
     return h_s_guess;
 }
 
-float AverageKAnalytical::reverse(float &h_a, float &h_s, float &R){
+float AverageKAnalytical::reverse(float h_a, float h_s, float R){
     float d_h = h_s * 0.01;
     float h_s_guess = 0.9 * h_s;
     AveragePAnalytical model;
@@ -182,4 +179,26 @@ float AverageKAnalytical::reverse(float &h_a, float &h_s, float &R){
     return h_s_guess;
 }
 
+float GeometricLine::reverse(float h_a, float h_s, float R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    GeometricLine model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
 
