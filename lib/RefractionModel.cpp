@@ -109,7 +109,7 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     return k_avg;
 }
 
-*/
+
 
 float FourThirds::reverse(float h_a, float h_s, float R){
     float d_h = h_s * 0.01;

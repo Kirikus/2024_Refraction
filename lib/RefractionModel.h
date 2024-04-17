@@ -46,7 +46,7 @@ public:
     virtual float reverse(float h_a, float h_s, float R) override;
 };
 
-/*
+
 class AveragePAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
@@ -64,6 +64,7 @@ public:
 private:
     ExponentialModel atmosphere;
 };
+
 
 class AverageP : public EffectiveRadius{
 public:
