@@ -86,7 +86,7 @@ void MainWindow::loggingDataFromGui()
 };
 
 
-void MainWindow::drawGraph(calculate_answer resultCalculation)
+void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_guess)
 {
     // Получаем указатель на QCustomPlot
     QCustomPlot *customPlot = ui->graph;
@@ -95,7 +95,7 @@ void MainWindow::drawGraph(calculate_answer resultCalculation)
     customPlot->clearGraphs();
 
     double x_rls = 0;
-    double d = resultCalculation.d;
+    double d = resultCalculationDirect.d;
     double x_target = qSqrt(d*d - (h_a-h_s)*(h_a-h_s)); // Координата цели
 
     // Устанавливаем область отображения графика
@@ -124,12 +124,12 @@ void MainWindow::drawGraph(calculate_answer resultCalculation)
     customPlot->graph(2)->addData(QVector<double>() << x_rls << x_target, QVector<double>() << h_a << h_s);
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_d от точки РЛС
-    double x_rls_end = x_rls + 0.1 * d * qCos(resultCalculation.psi_d+qAcos((x_target-x_rls)/resultCalculation.d));
-    double h_a_end = h_a + 0.1 * d * qSin(resultCalculation.psi_d+qAcos((x_target-x_rls)/resultCalculation.d));
+    double x_rls_end = x_rls + 0.1 * d * qCos(resultCalculationDirect.psi_d+qAcos((x_target-x_rls)/resultCalculationDirect.d));
+    double h_a_end = h_a + 0.1 * d * qSin(resultCalculationDirect.psi_d+qAcos((x_target-x_rls)/resultCalculationDirect.d));
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_g от точки цели
-    double x_target_end = x_target - 0.1 * d * qCos(resultCalculation.psi_g - qAcos((x_target-x_rls)/resultCalculation.d));
-    double h_s_end = h_s + 0.1 * d * qSin(resultCalculation.psi_g - qAcos((x_target-x_rls)/resultCalculation.d));
+    double x_target_end = x_target - 0.1 * d * qCos(resultCalculationDirect.psi_g - qAcos((x_target-x_rls)/resultCalculationDirect.d));
+    double h_s_end = h_s + 0.1 * d * qSin(resultCalculationDirect.psi_g - qAcos((x_target-x_rls)/resultCalculationDirect.d));
 
     // Создаем график для отрезков с углами psi_d и psi_g
     customPlot->addGraph();
@@ -142,6 +142,13 @@ void MainWindow::drawGraph(calculate_answer resultCalculation)
     customPlot->graph(4)->setLineStyle(QCPGraph::lsLine);
     customPlot->graph(4)->addData(QVector<double>() << x_target << x_target_end, QVector<double>() << h_s << h_s_end);
 
+
+    // Создаем график для расчётных точек цели
+    customPlot->addGraph();
+    customPlot->graph(5)->setPen(QPen(Qt::blue));
+    customPlot->graph(5)->setLineStyle(QCPGraph::lsNone);
+    customPlot->graph(5)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 8));
+    customPlot->graph(5)->addData(x_target, h_s_guess);
 
     // Перерисовываем график
     customPlot->replot();
@@ -156,12 +163,15 @@ void MainWindow::launchCalculation()
     extractDataFromGui();
     loggingDataFromGui();
     GeometricLine refractionModel;
-    calculate_answer resultCalculation = refractionModel.calculate(h_a, h_s, r_refr_dir);
-    ui->LogText->setText("resultRefraction: " +
-                         QString::number(resultCalculation.psi_d) + " " +
-                         QString::number(resultCalculation.d) + " " +
-                         QString::number(resultCalculation.psi_g));
-    drawGraph(resultCalculation);
+    calculate_answer resultCalculationDirect = refractionModel.calculate(h_a, h_s, r_refr_dir);
+    float h_s_guess = refractionModel.reverse(h_a, h_s, r_refr_dir);
+    ui->LogText->setText("resultRefractionDirect: " +
+                         QString::number(resultCalculationDirect.psi_d) + " " +
+                         QString::number(resultCalculationDirect.d) + " " +
+                         QString::number(resultCalculationDirect.psi_g) + " " +
+                         "resultRefractionReversed" +
+                         QString::number(h_s_guess));
+    drawGraph(resultCalculationDirect, h_s_guess);
 
 };
 
