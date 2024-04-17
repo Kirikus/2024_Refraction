@@ -4,12 +4,23 @@
 const int R_e = 6371000; //exemplary radius of the Earth
 
 
-
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
-    float psi_d = asin((h_a/R)*(1 - h_a/(2*(R_e + h_a))) + R/(2*(R_e + h_a)));
-    float psi_g = asin( h_a/R * (1 + h_a/(2 * R_e)) - R/(2 * R_e) );
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
+
+    float term1 = h_a / R;
+    float term2 = 1 - h_a / (2 * (R_e + h_a));
+    float term3 = R / (2 * (R_e + h_a));
+    float psi_d = asin(term1 * term2 + term3);
+
+    float term4 = h_a / R;
+    float term5 = 1 + h_a / (2 * R_e);
+    float term6 = R / (2 * R_e);
+    float psi_g = asin(term4 * term5 - term6);
+
     // formula 2.9
     float ksi_e = psi_d - psi_g;
     //formula 2.11
@@ -18,66 +29,177 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    // all formulas were taken from the manual pages 38-39
-    float k_ = k();
-    //formulas 2.12
-    float psi_d = asin((h_a/R) * (1 - h_a/(2*(k_ * R_e + h_a))) + R/(2*(k_ * R_e + h_a)));
-    float psi_g = asin(h_a/R * (1 + h_a/(2 * k_ * R_e)) - R/(2 * k_ * R_e) );
-    //formula 2.14
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
+    float k_ = k(h_a, h_s, R);
+    //formulas 2.17
+    float term_h_a_R = (h_a - h_s) / R;
+    float term_1 = 1 - (h_a - h_s) / (2 * (k_ * R_e + h_a));
+    float term_R = R / (2 * (k_ * R_e + h_a));
+    float psi_d = asin(term_h_a_R * term_1 + term_R);
+
+    float term_h_a_R_2 = (h_a - h_s) / R;
+    float term_2 = 1 + (h_a - h_s) / (2 * (k_ * R_e + h_s));
+    float term_R_2 = R / (2 * (k_ * R_e + h_s));
+    float psi_g = asin(term_h_a_R_2 * term_2 - term_R_2);
+
     float ksi_e = psi_d - psi_g;
-    //formula 2.16
-    float d = k_ * R_e * ksi_e;
+    //formula 2.19
+    float d = (k_ * R_e + h_s) * ksi_e;
 
     return calculate_answer(psi_d, psi_g, d);
 }
-/*
-void AverageKAnalytical::SetAtmosphere(){
-    ExponentialModel model;
+
+void AverageKAnalytical::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
 
-void AveragePAnalytical::SetAtmosphere(){
-    ExponentialModel model;
+void AveragePAnalytical::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
 
-/*
-void AverageP::SetAtmosphere(){
-    ExponentialModel model;
+void AverageP::SetAtmosphere(const ExponentialModel &model){
     atmosphere = model;
 }
-
-float AverageP::k(float h_a, float h_s, float R){
-    SetAtmosphere();
-    float h = 8; // for now dont know where it will get from
-    float H_b = 8; // its just a mock in future will be copy from SegmentedModel
-    float psi_g = 1; // from page 46
-    float p = 1 / (( (10^(-6) * atmosphere.Ns *cos(psi_g)) / H_b) * exp((-h + h_s) / H_b)); // formul 2.34
-    float k_ = 1 / ( 1 - (R_e/ p));
-    return k_;
-}
-
 
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
-    SetAtmosphere();
+    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
     //formula 2.9
-    float psi_g = asin(h_a/R * (1 + h_a/(2 * R_e)) - R/(2 * R_e) );
+    float term1 = h_a / R;
+    float term2 = 1 + h_a / (2 * R_e);
+    float term3 = R / (2 * R_e);
+    float psi_g = asin(term1 * term2 - term3);
+
     //formula 2.38
-    k_avg = (atmosphere.H_b / (h_a - h_s)) * log((exp((h_a-h_s)/atmosphere.H_b) - (10^(-6) * atmosphere.N_s * cos(psi_g)*R_e)/atmosphere.H_b)/(1 - (10^(_6)*atmosphere.N_s*cos(psi_g)*R_e)/atmosphere.H_b) );
+    double H_b = atmosphere.Hb(); //Hb
+    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
+    double term4 = H_b / (h_a - h_s);
+    double term4_5 = ((pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b);
+    double term5 = exp((h_a - h_s) / H_b) - term4_5;
+    double term6 = (pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b;
+    double term7 = 1 - term6;
+    double k_avg = term4 * log(term5 / term7);
+
     return k_avg;
 }
 
 float AveragePAnalytical::k(float h_a, float h_s, float R){
-    SetAtmosphere();
+    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+        std::cerr<<"incorrect values supplied"<<std::endl;
+    }
     //formula 2.9
-    float psi_g = asin(h_a/R * (1 + h_a/(2 * R_e)) - R/(2 * R_e) );
+    float term1 = h_a / R;
+    float term2 = 1 + h_a / (2 * R_e);
+    float term3 = R / (2 * R_e);
+    float psi_g = asin(term1 * term2 - term3);
+
+    double H_b = atmosphere.Hb(); //Hb
+    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     //formula 2.39
-    float p_avg = (0atmosphere.H_b / (10^(-6) * atmosphere.N_s * cos(psi_g))) * ((exp((h_a-h_s)/atmosphere.H_b) - 1)/((h_a-h_s)/atmosphere.H_b));
+    float term4 = H_b / (pow(10, -6) * N_s * cos(psi_g));
+    float term5 = exp((h_a - h_s) / H_b) - 1;
+    float term6 = (h_a - h_s) / H_b;
+    float p_avg = term4 * (term5 / term6);
     //formula 2.40
     float k_avg = 1 / (1 - (R_e/p_avg));
     return k_avg;
 }
 
 */
+
+float FourThirds::reverse(float h_a, float h_s, float R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    FourThirds model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
+
+float AveragePAnalytical::reverse(float h_a, float h_s, float R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    AveragePAnalytical model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
+
+float AverageKAnalytical::reverse(float h_a, float h_s, float R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    AveragePAnalytical model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
+
+float GeometricLine::reverse(float h_a, float h_s, float R){
+    float d_h = h_s * 0.01;
+    float h_s_guess = 0.9 * h_s;
+    GeometricLine model;
+
+    calculate_answer res_0 = model.calculate(h_a, h_s, R);
+    float angle_real = res_0.psi_d;
+
+    for (int iter = 0; iter<5000; iter++){
+        calculate_answer res_plus = model.calculate(h_a, (h_s_guess + d_h), R);
+        calculate_answer res_minus =  model.calculate(h_a, h_s - d_h, R);
+        float angle_plus = res_plus.psi_d;
+        float angle_minus = res_minus.psi_d;
+        float d = res_plus.d;
+        float angle = (angle_minus + angle_plus) / 2;
+        float error = abs(angle_real - angle);
+        float derivattive = (angle_plus + angle_minus) / (2 * d_h);
+        h_s_guess = h_s_guess + error / derivattive;
+    }
+
+    return h_s_guess;
+}
 
