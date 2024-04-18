@@ -18,32 +18,32 @@ struct calculate_answer{
 class RefractionModel{
 public:
     virtual calculate_answer calculate(float h_a, float h_s, float R) = 0;
-    virtual float reverse(float h_a, float h_s, float R) = 0;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) = 0;
 };
 
 class GeometricLine : public RefractionModel{
 public:
     calculate_answer calculate(float h_a, float h_s, float R) override;
-    virtual float reverse(float h_a, float h_s, float R) override;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) override;
 };
 
 class GeometricRound : public RefractionModel{
 public:
     virtual calculate_answer calculate(float h_a, float h_s, float R) = 0;
-    virtual float reverse(float h_a, float h_s, float R) = 0;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) = 0;
 };
 
 class EffectiveRadius : public GeometricRound{
 public:
     calculate_answer calculate(float h_a, float h_s, float R) override;
     virtual float k(float h_a, float h_s, float R) = 0;
-    virtual float reverse(float h_a, float h_s, float R) = 0;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) = 0;
 };
 
 class FourThirds : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override { return 4/3;};
-    virtual float reverse(float h_a, float h_s, float R) override;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) override;
 };
 
 
@@ -51,7 +51,7 @@ class AveragePAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
     void SetAtmosphere(const ExponentialModel &model);
-    virtual float reverse(float h_a, float h_s, float R) override;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) override;
 private:
     ExponentialModel atmosphere;
 };
@@ -60,7 +60,7 @@ class AverageKAnalytical : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
     void SetAtmosphere(const ExponentialModel &model);
-    virtual float reverse(float h_a, float h_s, float R) override;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) override;
 private:
     ExponentialModel atmosphere;
 };
@@ -69,7 +69,7 @@ class AverageP : public EffectiveRadius{
 public:
     float k(float h_a, float h_s, float R) override;
     void SetAtmosphere(const ExponentialModel &model);
-    virtual float reverse(float h_a, float h_s, float R) override;
+    virtual float reverse(float h_a, float h_s, float R, float psi_d) override;
 private:
     ExponentialModel atmosphere;
 };
