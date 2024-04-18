@@ -56,6 +56,7 @@ void MainWindow::extractDataFromGui()
     refraction_model_reverse = ui->comboBox_7->currentText();
     atmosphere_model = ui->comboBox_2->currentText();
     atmosphere_model_reverse = ui->comboBox_8->currentText();
+    std::cout<<"extracting: OK\n";
 
 };
 
@@ -86,6 +87,7 @@ void MainWindow::loggingDataFromGui()
     ui->LogText->append(QString("hb_unite_rev: " + QString::number(hb_unite_rev, 'f', 1)));
     ui->LogText->append(QString("hlayer_unite: " + QString::number(hlayer_unite, 'f', 1)));
     ui->LogText->append(QString("hlayer_unite_rev: " + QString::number(hlayer_unite_rev, 'f', 1)));
+    std::cout<<"logging: OK\n";
 };
 
 
@@ -167,14 +169,26 @@ void MainWindow::launchCalculation()
 {
     extractDataFromGui();
     loggingDataFromGui();
-    GeometricLine refractionModel;
-    calculate_answer resultCalculationDirect = refractionModel.calculate(h_a, h_s, r_refr_dir);
-    float h_s_guess = refractionModel.reverse(h_a, h_s, r_refr_dir);
-    ui->LogText->setText("resultRefractionDirect: " +
+
+    RefractionModel* refractionModel;
+    if(refraction_model == "без преломления (прямая)")
+        refractionModel = new GeometricLine;
+    else if(refraction_model == "эфф.радиус 4/3 (прямая)")
+        refractionModel = new FourThirds;
+    else if(refraction_model == "ср.знач. k (прямая)")
+        refractionModel = new AverageKAnalytical;
+    else if(refraction_model == "ср.зн. R кривизны (прямая)")
+        refractionModel = new AveragePAnalytical;
+    //else if(refraction_model == "числ.интегрирование (прямая)")
+      //  refractionModel = new GeometricLine;
+
+    calculate_answer resultCalculationDirect = refractionModel->calculate(h_a, h_s, r_refr_dir);
+    float h_s_guess = refractionModel->reverse(h_a, h_s, r_refr_dir);
+    ui->LogText->append("resultRefractionDirect: " +
                          QString::number(resultCalculationDirect.psi_d) + " " +
                          QString::number(resultCalculationDirect.d) + " " +
                          QString::number(resultCalculationDirect.psi_g) + " " +
-                         "resultRefractionReversed" +
+                         "resultRefractionReversed: " +
                          QString::number(h_s_guess));
     drawGraph(resultCalculationDirect, h_s_guess);
 
