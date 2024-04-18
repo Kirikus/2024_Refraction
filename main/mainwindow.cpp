@@ -14,7 +14,10 @@ void setValidators(Ui::MainWindow *ui)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-  this->resize(900, this->height());
+
+  QScreen *screen = QGuiApplication::primaryScreen();
+  QRect  screenGeometry = screen->geometry();
+  this->resize(screenGeometry.width() * 0.75, screenGeometry.height() * 0.95);
 
   setValidators(ui);
 
@@ -154,7 +157,9 @@ void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_g
     customPlot->replot();
 
     customPlot->setVisible(true);
-    customPlot->resize(80, customPlot->height());
+
+    QList sizes = {1, 1};
+    ui->splitter_2->setSizes(sizes);
 }
 
 
