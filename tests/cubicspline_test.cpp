@@ -12,10 +12,10 @@ namespace tt = boost::test_tools;
 
 BOOST_AUTO_TEST_SUITE(test_cubic_spline_interpolation)
 
-const std::vector<double> x_values = {3, 1, 5, 7};
-const std::vector<double> y_values = {1, 3, 7, 5};
-constexpr int x_min = 1;
-constexpr int x_max = 7;
+const std::vector<double> x_values = {1, 0, 4, 5, 7, 8, 10};
+const std::vector<double> y_values = {3, 1, 5, 4, 6, 3, 3};
+constexpr int x_min = 0;
+constexpr int x_max = 10;
 CubicSpline testCubicSpline = CubicSpline(x_values, y_values);
 
 BOOST_AUTO_TEST_CASE(cubic_spline_interpolation_at_dots) {
