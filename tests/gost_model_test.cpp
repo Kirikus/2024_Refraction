@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "../lib/gost_model.cpp"
+#include "../lib/gost_model.h"
 #include "../lib/cubicspline.h"
 #include "../lib/linear.h"
 #include "qcustomplot.h"
@@ -19,9 +19,9 @@ const double h_min = 0, h_max = 12000;
 const std::vector<double> P_values = {1, 15, 20, 11, 30, 45};
 const std::vector<double> T_values = {1, 288, 150, 250, 300, 280};
 
-CubicSpline* testCubicSpline_P = new CubicSpline(h_values, P_values);
-Linear* testLinear_T = new Linear(h_values, T_values);
-GOSTModel testGOSTModel = GOSTModel(testCubicSpline_P, testLinear_T);
+CubicSpline testCubicSpline_P = CubicSpline(h_values, P_values);
+Linear testLinear_T = Linear(h_values, T_values);
+GOSTModel<CubicSpline, Linear> testGOSTModel = GOSTModel(testCubicSpline_P, testLinear_T);
 
 BOOST_AUTO_TEST_CASE(N_at_2000m_continuous) {
     BOOST_TEST(testGOSTModel.N(2000 - 1e-6) == testGOSTModel.N(2000 + 1e-6), tt::tolerance(1e-6));
