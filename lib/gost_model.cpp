@@ -1,7 +1,7 @@
 #include "gost_model.h"
 
-template <class MODEL>
-double GOSTModel<MODEL>::rho_w(double h) {
+template <class P_MODEL, class T_MODEL>
+double GOSTModel<P_MODEL, T_MODEL>::rho_w(double h) {
     double rh = 0.6;
     double pho_w_max = 12.8;
     const double pho_w0 = pho_w_max * rh;
@@ -21,12 +21,15 @@ double GOSTModel<MODEL>::rho_w(double h) {
       return pho_w0 * rho_w_h_2 * std::exp(-(h - h_2) / slope_high);
 }
 
-template <class MODEL>
-double GOSTModel<MODEL>::N(double h) {
-    double T = T_h->y(h);
-    double P = P_h->y(h);
+template <class P_MODEL, class T_MODEL>
+double GOSTModel<P_MODEL, T_MODEL>::N(double h) {
+    double T = T_h.y(h);
+    double P = P_h.y(h);
     double e = T * rho_w(h) / 216.68;
     return 77.6 / T * (P + 4810 * e / T);
 }
 
-template class GOSTModel<Function1D*>;
+template class GOSTModel<Linear, Linear>;
+template class GOSTModel<CubicSpline, CubicSpline>;
+template class GOSTModel<CubicSpline, Linear>;
+template class GOSTModel<Linear, CubicSpline>;

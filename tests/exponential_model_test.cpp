@@ -49,7 +49,7 @@ void plot_Ns_line(QCustomPlot &customPlot, double Ns, QColor color){
 BOOST_AUTO_TEST_CASE(plot_2_32) {
     // Plot 2.32 from booklet
     int argc = 1;
-    char *argv[] = {"The dependence of the refractive index on height for an expon model"};
+    char *argv[] = {"The dependence of the refractive index on height for an Exponential model"};
     QApplication a(argc, argv);
 
     QCustomPlot customPlot = QCustomPlot();
