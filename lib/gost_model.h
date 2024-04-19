@@ -4,7 +4,7 @@
 #include "atmospheric_model.h"
 #include "function1D.h"
 
-template <class MODEL>
+template <class P_MODEL, class T_MODEL>
 class GOSTModel : public AtmosphericModel {
     public:
         // The dependence of the refractive index on height
@@ -15,7 +15,7 @@ class GOSTModel : public AtmosphericModel {
 
         // P_h : pressure depending on height, [mbar]
         // T_h : temperature depending on height, [K]
-        GOSTModel(MODEL P_h, MODEL T_h): P_h(P_h), T_h(T_h) {
+        GOSTModel(P_MODEL P_h, T_MODEL T_h): P_h(P_h), T_h(T_h) {
 //            static_assert(std::is_base_of<Function1D, MODEL>::value, "MODEL must be a child class of Function1D");
         } // TODO: search for correct static_assert
 
@@ -26,8 +26,8 @@ class GOSTModel : public AtmosphericModel {
         double rho_w(double h);
 
     private:
-        MODEL P_h;
-        MODEL T_h;
+        P_MODEL P_h;
+        T_MODEL T_h;
 };
 
 #endif // GOST_MODEL_H
