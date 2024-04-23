@@ -1,6 +1,6 @@
-#define BOOST_TEST_MODULE MyTest
+//#define BOOST_TEST_MODULE MyTest
 
-#include "RefractionModel.cpp"
+#include "RefractionModel.h"
 
 #include <boost/test/unit_test.hpp>
 

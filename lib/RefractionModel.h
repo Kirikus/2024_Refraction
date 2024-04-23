@@ -5,7 +5,7 @@
 #define REFRACTIONMODEL_H
 
 
-#include "exponential_model.cpp"
+#include "exponential_model.h"
 
 struct calculate_answer{
     float psi_d;
