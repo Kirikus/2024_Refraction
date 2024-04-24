@@ -136,9 +136,11 @@ float RefractionModel::reverse(float h_a, float h_s_guess, float R, float psi_d)
         float angle_minus = res_minus.psi_d;
         float d = res_plus.d;
         float angle = (angle_minus + angle_plus) / 2;
+
         float error = fabs(angle_real - angle);
         if (error < 1/100000)
            return h_s;
+
         float derivattive = (angle_plus + angle_minus) / (2 * d_h);
         h_s = h_s + error / derivattive;
     }
