@@ -9,17 +9,18 @@ class ExponentialModel : public AtmosphericModel {
         // SRC: (2.30, 2.31) from citation
         //    N : refractive index, []
         //    h : height above the sea level, [m]
-    virtual double N(double h) override;
+        virtual double N(double h) override;
 
         // Ns : refractive index at the Earth's surface, []
-        // hs : height of the surface above the level, [m]
+        double Ns;
+
         ExponentialModel(double Ns = 324.8, double hs = 0): Ns(Ns), hs(hs) {}
 
         // SRC: (2.30) from citation
         double Hb();
 
     private:
-        double Ns;
+        // hs : height of the surface above the level, [m]
         double hs;
 };
 
