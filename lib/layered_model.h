@@ -19,7 +19,7 @@ class LayeredModel: public AtmosphericModel {
             // Check if heights are sorted in increasing order
             for (size_t i = 0; i < heights.size() - 1; ++i)
                 if (heights[i] >= heights[i + 1])
-                    throw std::invalid_argument("Heights must be sorted in increasing order");
+                    throw std::invalid_argument("Heights must be sorted in an increasing order");
         }
 
     private:
