@@ -22,6 +22,7 @@ BOOST_AUTO_TEST_CASE(plot_2_34) {
     QCustomPlot customPlot;
 
     QVector<double> angles = {M_PI / 6, M_PI / 18, M_PI / 60, M_PI / 180, 0.3 * M_PI / 180, 0.1 * M_PI / 180};
+    QVector<QColor> colors = {Qt::blue, Qt::red, Qt::green, Qt::gray, Qt::cyan, Qt::black};
     double hs = 0;
     double Ns = 313;
     ExponentialModel exp_model(Ns, hs);
@@ -34,7 +35,7 @@ BOOST_AUTO_TEST_CASE(plot_2_34) {
     for (int j = 0; j < angles.size(); ++j) {
         customPlot.addGraph();
         for (int i = 0; i < N; ++i) {
-            customPlot.graph(j)->setPen(QPen(Qt::blue));
+            customPlot.graph(j)->setPen(QPen(colors[j]));
             y[i] = h_min + i * (h_max - h_min) / (N - 1);
             x[i] = abs(testAnalytical.psi_d(angles[j], y[i], hs) - angles[j]) * 180 / M_PI;
         }
