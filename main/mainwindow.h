@@ -66,7 +66,7 @@ class MainWindow : public QMainWindow {
   void extractDataFromGui();
   void loggingDataFromGui();
   void drawGraph(calculate_answer resultCalculation, float h_s_guess);
-  void fillFromFile(const QString &fileName, stateStandartModelData &data);
+  stateStandartModelData fillFromFile(const QString &fileName);
 
 };
 #endif  // MAINWINDOW_H
