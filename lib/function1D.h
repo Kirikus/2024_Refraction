@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 struct Point {
     double x;
@@ -21,6 +22,10 @@ class Function1D {
                     Point p(x_values[i], y_values[i]);
                     points.push_back(p);
                 }
+
+                std::sort(points.begin(), points.end(), [](const Point& a, const Point& b) {
+                        return a.x < b.x;
+                    });
             }
         virtual double y(double x) = 0;
 
