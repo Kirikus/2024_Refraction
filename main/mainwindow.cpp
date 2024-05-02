@@ -206,32 +206,39 @@ void MainWindow::launchCalculation()
     float psi_d = resultCalculationDirect.psi_d;
     std::cout<<h_a<<" "<<h_s<<" "<<d<<" "<<psi_d<<"\n";
     float h_s_guess = refractionModel_rev->reverse(h_a, h_s, d, psi_d);
-    ui->LogText->append("resultRefractionDirect: " +
-                         QString::number(resultCalculationDirect.psi_d) + " " +
-                         QString::number(resultCalculationDirect.d) + " " +
-                         QString::number(resultCalculationDirect.psi_g) + " " +
-                         "resultRefractionReversed: " +
+    ui->ResultsText->clear();
+    ui->ResultsText->append("Input data: \n    h_a = " + QString::number(h_a) +
+                            "\n    h_s = " + QString::number(h_s) +
+                            "\n    R = " + QString::number(r_refr_dir));
+    ui->ResultsText->append("Direct task result: \n    psi_d = " +
+                         QString::number(resultCalculationDirect.psi_d) + "\n    d = " +
+                         QString::number(resultCalculationDirect.d) + "\n    psi_g = " +
+                         QString::number(resultCalculationDirect.psi_g) + "\n" +
+                         "Reversed task result: \n    h_guess = " +
                          QString::number(h_s_guess)
                         );
     drawGraph(resultCalculationDirect, h_s_guess);
 
+    ui->VerdictLine->setText("OK");
+
 };
 
 
-void MainWindow::fillFromFile(const QString &filename, stateStandartModelData &data)
+stateStandartModelData MainWindow::fillFromFile(const QString &filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug() << "Error opening file" << filename;
         ui->VerdictLine->setText("Error opening file");
-        return;
     }
 
+    stateStandartModelData data;
     QTextStream in(&file);
     while (!in.atEnd())
     {
         QString line = in.readLine();
+        qDebug()<<"line"<<line;
         QStringList values = line.split(",");
 
         if (values.size() == 3)
@@ -239,16 +246,17 @@ void MainWindow::fillFromFile(const QString &filename, stateStandartModelData &d
             data.Heights.push_back(values[0].toDouble());
             data.Pressures.push_back(values[1].toDouble());
             data.Temperatures.push_back(values[2].toDouble());
+            qDebug()<<"here"<<'\n';
         }
-        else
+        else if(line!="")
         {
-            qDebug() << "Invalid format in file" << filename;
-            ui->VerdictLine->setText("Invalid form in file");
-            return;
+            qDebug() << "Invalid format in file" << filename <<values.size()<<"\n";
+            ui->VerdictLine->setText("Invalid format in file");
         }
     }
 
     file.close();
+    return data;
 }
 
 void MainWindow::stateStandartHandler()
@@ -257,7 +265,7 @@ void MainWindow::stateStandartHandler()
         tr("Open Table"), "/home/", tr("Text Files (*.txt *.csv *.xlsx, *.odf)"));
     ui->LogText->append("Direct task state standart model file: "+ fileName);
     ui->file_dialog_gost->setText(fileName);
-    fillFromFile(fileName, ssm_direct);
+    stateStandartModelData ssm_direct = fillFromFile(fileName);
     ui->LogText->append("first line of direct file: "
                       + QString::number(ssm_direct.Heights[0]) + ", "
                       + QString::number(ssm_direct.Pressures[0]) + ", "
@@ -270,7 +278,7 @@ void MainWindow::stateStandartHandlerRev()
         tr("Open Table"), "/home/", tr("Text Files (*.txt *.csv *.xlsx, *.odf)"));
     ui->LogText->append("Reversed task state standart model file: "+ fileName);
     ui->file_dialog_gost_4->setText(fileName);
-    fillFromFile(fileName, ssm_reversed);
+    stateStandartModelData ssm_reversed = fillFromFile(fileName);
     ui->LogText->append("first line of reversed file: "
                       + QString::number(ssm_reversed.Heights[0]) + ", "
                       + QString::number(ssm_reversed.Pressures[0]) + ", "
