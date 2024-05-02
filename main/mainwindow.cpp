@@ -106,7 +106,7 @@ void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_g
     // Устанавливаем область отображения графика
     customPlot->xAxis->setRange(x_rls - std::max(x_rls, x_target)/5 - 1,
                                 x_target + std::max(x_rls, x_target)/5 +1); // Учитываем отступы
-    customPlot->yAxis->setRange(0, 1.25 * std::max(h_a, h_s) + 1); // Выбираем максимальное значение по высоте
+    customPlot->yAxis->setRange(std::min(h_a, h_s) - 0.5*fabs(std::min(h_a, h_s)), 1.25 * std::max(h_a, h_s) + 1); // Выбираем максимальное значение по высоте
 
     // Создаем график для точек РЛС
     customPlot->addGraph();
@@ -129,12 +129,19 @@ void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_g
     customPlot->graph(2)->addData(QVector<double>() << x_rls << x_target, QVector<double>() << h_a << h_s);
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_d от точки РЛС
-    double x_rls_end = x_rls + 0.1 * d * qCos(resultCalculationDirect.psi_d+qAcos((x_target-x_rls)/resultCalculationDirect.d));
-    double h_a_end = h_a + 0.1 * d * qSin(resultCalculationDirect.psi_d+qAcos((x_target-x_rls)/resultCalculationDirect.d));
+    double dx_rls = x_target - x_rls;
+    double dy_rls = h_s - h_a;
+    double x_rls_end = x_rls + 0.1*(dx_rls*std::cos(resultCalculationDirect.psi_d) - dy_rls * std::sin(resultCalculationDirect.psi_d));
+    double h_a_end = h_a + 0.1*(dx_rls*std::sin(resultCalculationDirect.psi_d) + dy_rls * std::cos(resultCalculationDirect.psi_d));
+    ui->LogText->append(QString::number(dx_rls) + " " + QString::number(dy_rls));
+    ui->LogText->append(QString::number(resultCalculationDirect.d));
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_g от точки цели
-    double x_target_end = x_target - 0.1 * d * qCos(resultCalculationDirect.psi_g - qAcos((x_target-x_rls)/resultCalculationDirect.d));
-    double h_s_end = h_s + 0.1 * d * qSin(resultCalculationDirect.psi_g - qAcos((x_target-x_rls)/resultCalculationDirect.d));
+    double dx_target = x_rls - x_target;
+    double dy_target = h_a - h_s;
+    double x_target_end = x_target + 0.1*(dx_target*std::cos(resultCalculationDirect.psi_g) + dy_target * std::sin(resultCalculationDirect.psi_g));
+    double h_s_end = h_s + 0.1*(-dx_target*std::sin(resultCalculationDirect.psi_g) + dy_target * std::cos(resultCalculationDirect.psi_g));
+    ui->LogText->append(QString::number(dx_target) + " " + QString::number(dy_target));
 
     // Создаем график для отрезков с углами psi_d и psi_g
     customPlot->addGraph();
@@ -170,26 +177,42 @@ void MainWindow::launchCalculation()
     extractDataFromGui();
     loggingDataFromGui();
 
-    RefractionModel* refractionModel;
+    RefractionModel* refractionModel_dir=nullptr;
+    RefractionModel* refractionModel_rev=nullptr;
+
     if(refraction_model == "без преломления (прямая)")
-        refractionModel = new GeometricLine;
+        refractionModel_dir = new GeometricLine;
     else if(refraction_model == "эфф.радиус 4/3 (прямая)")
-        refractionModel = new FourThirds;
+        refractionModel_dir = new FourThirds;
     else if(refraction_model == "ср.знач. k (прямая)")
-        refractionModel = new AverageKAnalytical;
+        refractionModel_dir = new AverageKAnalytical;
     else if(refraction_model == "ср.зн. R кривизны (прямая)")
-        refractionModel = new AveragePAnalytical;
+        refractionModel_dir = new AveragePAnalytical;
     //else if(refraction_model == "числ.интегрирование (прямая)")
       //  refractionModel = new GeometricLine;
 
-    calculate_answer resultCalculationDirect = refractionModel->calculate(h_a, h_s, r_refr_dir);
-    float h_s_guess = refractionModel->reverse(h_a, h_s, r_refr_dir);
+    if(refraction_model_reverse == "без преломления (обратная)")
+        refractionModel_rev = new GeometricLine;
+    else if(refraction_model_reverse == "эфф.радиус 4/3 (обратная)")
+        refractionModel_rev = new FourThirds;
+    else if(refraction_model_reverse == "ср.знач. k (обратная)")
+        refractionModel_rev = new AverageKAnalytical;
+    else if(refraction_model_reverse == "ср.зн. R кривизны (обратная)")
+        refractionModel_rev = new AveragePAnalytical;
+    //else if(refraction_model == "числ.интегрирование (обратная)")
+      //  refractionModel = new GeometricLine;
+    calculate_answer resultCalculationDirect = refractionModel_dir->calculate(h_a, h_s, r_refr_dir);
+    float d = resultCalculationDirect.d;
+    float psi_d = resultCalculationDirect.psi_d;
+    std::cout<<h_a<<" "<<h_s<<" "<<d<<" "<<psi_d<<"\n";
+    float h_s_guess = refractionModel_rev->reverse(h_a, h_s, d, psi_d);
     ui->LogText->append("resultRefractionDirect: " +
                          QString::number(resultCalculationDirect.psi_d) + " " +
                          QString::number(resultCalculationDirect.d) + " " +
                          QString::number(resultCalculationDirect.psi_g) + " " +
                          "resultRefractionReversed: " +
-                         QString::number(h_s_guess));
+                         QString::number(h_s_guess)
+                        );
     drawGraph(resultCalculationDirect, h_s_guess);
 
 };
