@@ -1,9 +1,44 @@
 //#define BOOST_TEST_MODULE MyTest
 
 #include "RefractionModel.h"
-
+#include "qcustomplot.h"
 #include <boost/test/unit_test.hpp>
 
+/*
+void plot_err_line(QCustomPlot &customPlot, QColor color, float R){
+    const int n = 1000;
+    const double h_a = 1000, h_s = 30000;
+    QVector<double> x(n), y(n), y1(n);
+    auto graph = customPlot.addGraph();
+    graph->setPen(QPen(color));
+    FourThirds model_main;
+    AverageKAnalytical model;
+    ExponentialModel el;
+    model.SetAtmosphere(el);
+
+    for (int i = 0; i < n; ++i) {
+        calculate_answer res_main = model_main.calculate(h_a, h_s* (i/n), R);
+        calculate_answer res = model.calculate(h_a, h_s* (i/n), R);
+        y[i] = fabs(res_main.psi_d - res.psi_d);
+        x[i] = h_s* (i/n);
+        y1[i] = 0;
+    }
+
+    graph->setData(x, y);
+    graph->setName("err");
+
+}
+BOOST_AUTO_TEST_SUITE(plot_test)
+
+BOOST_AUTO_TEST_CASE(err){
+    QCustomPlot qcast = QCustomPlot();
+    float R = 100000;
+    //plot_err_line(qcast, Qt::red, R);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+*/
 BOOST_AUTO_TEST_SUITE(test_geometric_line)
 
 BOOST_AUTO_TEST_CASE(ReturnCorrectAnswer) {
@@ -353,6 +388,8 @@ BOOST_AUTO_TEST_CASE(ReturnNanOfBigNumbers){
     }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+
 
 BOOST_AUTO_TEST_SUITE(ReverseTask)
 
