@@ -24,23 +24,28 @@ BOOST_AUTO_TEST_CASE(plot_2_34) {
     QVector<double> angles = {M_PI / 6, M_PI / 18, M_PI / 60, M_PI / 180, 0.3 * M_PI / 180, 0.1 * M_PI / 180};
     QVector<QColor> colors = {Qt::blue, Qt::red, Qt::green, Qt::gray, Qt::cyan, Qt::black};
     double hs = 0;
-    double Ns = 313;
-    ExponentialModel exp_model(Ns, hs);
-    Analytical testAnalytical(exp_model);
+    QVector<double> Ns_values = {250, 313, 400};
+    QVector<Qt::PenStyle> lines = {Qt::SolidLine, Qt::DashLine, Qt::DotLine};
 
-    const int N = 100;
-    const double h_min = 0, h_max = 30000;
-    QVector<double> x(N), y(N);
 
-    for (int j = 0; j < angles.size(); ++j) {
-        customPlot.addGraph();
-        for (int i = 0; i < N; ++i) {
-            customPlot.graph(j)->setPen(QPen(colors[j]));
-            y[i] = h_min + i * (h_max - h_min) / (N - 1);
-            x[i] = abs(testAnalytical.psi_d(angles[j], y[i], hs) - angles[j]) * 180 / M_PI;
+    for (int k = 0; k < Ns_values.size(); ++k){
+        ExponentialModel exp_model(Ns_values[k], hs);
+        Analytical testAnalytical(exp_model);
+
+        const int N = 100;
+        const double h_min = 0, h_max = 30000;
+        QVector<double> x(N), y(N);
+
+        for (int j = 0; j < angles.size(); ++j) {
+            customPlot.addGraph();
+            for (int i = 0; i < N; ++i) {
+                customPlot.graph(j + k * 6)->setPen(QPen(colors[j], 2,  lines[k]));
+                y[i] = h_min + i * (h_max - h_min) / (N - 1);
+                x[i] = abs(testAnalytical.psi_d(angles[j], y[i], hs) - angles[j]) * 180 / M_PI;
+            }
+            customPlot.graph(j + k * 6)->setData(x, y);
+            customPlot.graph(j + k * 6)->setName("psi_g  = " + QString::number(angles[j] * 180 / M_PI) + " at "+ QString::number(Ns_values[k]));
         }
-        customPlot.graph(j)->setData(x, y);
-        customPlot.graph(j)->setName("psi_g = " + QString::number(angles[j] * 180 / M_PI));
     }
 
     customPlot.xAxis->grid()->setSubGridVisible(true);
