@@ -67,6 +67,10 @@ class MainWindow : public QMainWindow {
   void loggingDataFromGui();
   void drawGraph(calculate_answer resultCalculation, float h_s_guess);
   stateStandartModelData fillFromFile(const QString &fileName);
+  std::unique_ptr<AtmosphericModel> chooseAtmosphericModelDir ();
+  std::unique_ptr<AtmosphericModel> chooseAtmosphericModelRev ();
+  RefractionModel* chooseRefractionModelDir ();
+  RefractionModel* chooseRefractionModelRev ();
 
 };
 #endif  // MAINWINDOW_H

@@ -177,30 +177,10 @@ void MainWindow::launchCalculation()
     extractDataFromGui();
     loggingDataFromGui();
 
-    RefractionModel* refractionModel_dir=nullptr;
-    RefractionModel* refractionModel_rev=nullptr;
+    RefractionModel* refractionModel_dir=chooseRefractionModelDir();
+    RefractionModel* refractionModel_rev=chooseRefractionModelRev();
 
-    if(refraction_model == "без преломления (прямая)")
-        refractionModel_dir = new GeometricLine;
-    else if(refraction_model == "эфф.радиус 4/3 (прямая)")
-        refractionModel_dir = new FourThirds;
-    else if(refraction_model == "ср.знач. k (прямая)")
-        refractionModel_dir = new AverageKAnalytical;
-    else if(refraction_model == "ср.зн. R кривизны (прямая)")
-        refractionModel_dir = new AveragePAnalytical;
-    //else if(refraction_model == "числ.интегрирование (прямая)")
-      //  refractionModel = new GeometricLine;
 
-    if(refraction_model_reverse == "без преломления (обратная)")
-        refractionModel_rev = new GeometricLine;
-    else if(refraction_model_reverse == "эфф.радиус 4/3 (обратная)")
-        refractionModel_rev = new FourThirds;
-    else if(refraction_model_reverse == "ср.знач. k (обратная)")
-        refractionModel_rev = new AverageKAnalytical;
-    else if(refraction_model_reverse == "ср.зн. R кривизны (обратная)")
-        refractionModel_rev = new AveragePAnalytical;
-    //else if(refraction_model == "числ.интегрирование (обратная)")
-      //  refractionModel = new GeometricLine;
     calculate_answer resultCalculationDirect = refractionModel_dir->calculate(h_a, h_s, r_refr_dir);
     float d = resultCalculationDirect.d;
     float psi_d = resultCalculationDirect.psi_d;
@@ -223,6 +203,99 @@ void MainWindow::launchCalculation()
 
 };
 
+std::unique_ptr<AtmosphericModel> MainWindow::chooseAtmosphericModelDir()
+{
+    if(atmosphere_model == "сегментированная модель")
+    {
+        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new SegmentedModel());
+        return atmosphereModel_dir;
+    }
+    else if(atmosphere_model == "модель ГОСТ 4401-81")
+    {
+        CubicSpline cs_p = CubicSpline(ssm_direct.Heights, ssm_direct.Pressures);
+        Linear l_t = Linear(ssm_direct.Heights, ssm_direct.Temperatures);
+        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new GOSTModel<CubicSpline, Linear>(cs_p, l_t));
+        return atmosphereModel_dir;
+    }
+    else
+    {
+        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new ExponentialModel());
+        return atmosphereModel_dir;
+    }
+};
+
+std::unique_ptr<AtmosphericModel> MainWindow::chooseAtmosphericModelRev()
+{
+    if(atmosphere_model == "сегментированная модель")
+    {
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new SegmentedModel());
+        return atmosphereModel_rev;
+    }
+    else if(atmosphere_model == "модель ГОСТ 4401-81")
+    {
+        CubicSpline cs_p = CubicSpline(ssm_direct.Heights, ssm_direct.Pressures);
+        Linear l_t = Linear(ssm_direct.Heights, ssm_direct.Temperatures);
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new GOSTModel<CubicSpline, Linear>(cs_p, l_t));
+        return atmosphereModel_rev;
+    }
+    else
+    {
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new ExponentialModel());
+        return atmosphereModel_rev;
+    }
+};
+
+RefractionModel* MainWindow::chooseRefractionModelDir()
+{
+    if(refraction_model == "эфф.радиус 4/3 (прямая)")
+    {
+        FourThirds* refractionModel_dir = new FourThirds;
+        return refractionModel_dir;
+    }
+    else if(refraction_model == "ср.знач. k (прямая)")
+    {
+        AverageK* refractionModel_dir = new AverageK;
+        refractionModel_dir->SetAtmosphere(chooseAtmosphericModelDir());
+        return refractionModel_dir;
+    }
+    else if(refraction_model == "ср.зн. R кривизны (прямая)")
+    {
+        AverageP* refractionModel_dir = new AverageP;
+        refractionModel_dir->SetAtmosphere(chooseAtmosphericModelDir());
+        return refractionModel_dir;
+    }
+    else
+    {
+        GeometricLine* refractionModel_dir = new GeometricLine;
+        return refractionModel_dir;
+    }
+};
+
+RefractionModel* MainWindow::chooseRefractionModelRev()
+{
+    if(refraction_model == "эфф.радиус 4/3 (прямая)")
+    {
+        FourThirds* refractionModel_rev = new FourThirds;
+        return refractionModel_rev;
+    }
+    else if(refraction_model == "ср.знач. k (прямая)")
+    {
+        AverageK* refractionModel_rev = new AverageK;
+        refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
+        return refractionModel_rev;
+    }
+    else if(refraction_model == "ср.зн. R кривизны (прямая)")
+    {
+        AverageP* refractionModel_rev = new AverageP;
+        refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
+        return refractionModel_rev;
+    }
+    else
+    {
+        GeometricLine* refractionModel_rev = new GeometricLine;
+        return refractionModel_rev;
+    }
+};
 
 stateStandartModelData MainWindow::fillFromFile(const QString &filename)
 {

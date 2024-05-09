@@ -7,6 +7,8 @@
 
 #include "atmospheric_model.h"
 #include "exponential_model.h"
+#include "segmented_model.h"
+#include "gost_model.h"
 
 struct calculate_answer{
     float psi_d;
