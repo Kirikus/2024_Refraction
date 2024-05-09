@@ -1,5 +1,6 @@
 #include "RefractionModel.h"
 #include <cmath>
+#include <memory>
 
 const int R_e = 6371000; //exemplary radius of the Earth
 
@@ -7,7 +8,7 @@ const int R_e = 6371000; //exemplary radius of the Earth
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
-    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     std::cout<<("calculate\n");
@@ -30,7 +31,7 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     float k_ = k(h_a, h_s, R);
@@ -52,21 +53,8 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
     return calculate_answer(psi_d, psi_g, d);
 }
 
-void AverageKAnalytical::SetAtmosphere(const ExponentialModel &model){
-    atmosphere = model;
-}
-
-void AveragePAnalytical::SetAtmosphere(const ExponentialModel &model){
-    atmosphere = model;
-}
-
-void AverageP::SetAtmosphere(const ExponentialModel &model){
-    atmosphere = model;
-}
-
-
 float AverageKAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     //formula 2.9
@@ -76,8 +64,8 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
     float psi_g = asin(term1 * term2 - term3);
 
     //formula 2.38
-    double H_b = atmosphere.Hb(); //Hb
-    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
+    double H_b = atmosphere->Hb(); //Hb
+    double N_s = atmosphere->N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     double term4 = H_b / (h_a - h_s);
     double term4_5 = ((pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b);
     double term5 = exp((h_a - h_s) / H_b) - term4_5;
@@ -89,7 +77,7 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
 }
 
 float AveragePAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     //formula 2.9
@@ -98,8 +86,8 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
     float term3 = R / (2 * R_e);
     float psi_g = asin(term1 * term2 - term3);
 
-    double H_b = atmosphere.Hb(); //Hb
-    double N_s = atmosphere.N(h_s); //Ns // затычка для h, вопрос по использованию так как в
+    double H_b = atmosphere->Hb(); //Hb
+    double N_s = atmosphere->N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     //formula 2.39
     float term4 = H_b / (pow(10, -6) * N_s * cos(psi_g));
     float term5 = exp((h_a - h_s) / H_b) - 1;
@@ -112,31 +100,23 @@ float AveragePAnalytical::k(float h_a, float h_s, float R){
 
 float AverageP::k(float h_a, float h_s, float R){
     //formula 2.9
-    float term1 = h_a / R;
-    float term2 = 1 + h_a / (2 * R_e);
-    float term3 = R / (2 * R_e);
-    float psi_g = asin(term1 * term2 - term3);
-    //formula 2.37
-    double exp_part = exp(-(h_a - h_s) / atmosphere.Hb());
-    double frac_part = 10e-6 * atmosphere.N(h_s) * cos(psi_g)
-            * R_e * exp_part / atmosphere.Hb();
-    double k = 1.0 / (1.0 - frac_part);
+    float dh = 0.00001;
+    float determ = ( (atmosphere -> N(h_a + dh)) - (atmosphere -> N(h_a)))/dh;
+    float ro = (atmosphere -> N(h_a)) / determ;
+    float k = 1 / (1 - (R_e/ro) );
+    std::cout<<k<<std::endl;
     return k;
 }
 
 float RefractionModel::reverse(float h_a, float h_s_guess, float R, float psi_d){
-    std::cout<<"reverse\n";
     float d_h = h_s_guess * 0.01;
     float h_s = h_s_guess;
 
     float angle_real = psi_d;
 
     for (int iter = 0; iter<50; iter++){
-        std::cout<<"reverse2\n";
         calculate_answer res_plus = calculate(h_a, (h_s + d_h), R);
-        std::cout<<"reverse 2.5\n";
         calculate_answer res_minus = calculate(h_a, h_s - d_h, R);
-        std::cout<<"reverse3\n";
         float angle_plus = res_plus.psi_d;
         float angle_minus = res_minus.psi_d;
         float d = res_plus.d;
@@ -151,4 +131,34 @@ float RefractionModel::reverse(float h_a, float h_s_guess, float R, float psi_d)
     }
 
     return h_s;
+}
+
+float AverageK::k(float h_a, float h_s, float R){
+    int steps = 1000;
+    float res = 0;
+    float dh = (h_a - h_s) / steps;
+    for (int i = 0; i < steps; i++){
+         float h = h_a + steps * dh;
+         res += 1/atmosphere->N(h) * (
+                     (atmosphere->N(h+0.5*dh) - atmosphere->N(h-0.5*dh)) / dh) * dh;
+    }
+    return res;
+}
+
+void AverageK::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
+    atmosphere = std::move(model);
+}
+
+void AverageP::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
+    atmosphere = std::move(model);
+}
+
+void AverageKAnalytical::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
+    std::unique_ptr<ExponentialModel> model_exp(new ExponentialModel());
+    atmosphere = std::move(model_exp);
+}
+
+void AveragePAnalytical::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
+    std::unique_ptr<ExponentialModel> model_exp(new ExponentialModel());
+    atmosphere = std::move(model_exp);
 }
