@@ -1,5 +1,6 @@
 #include "RefractionModel.h"
 #include <cmath>
+#include <memory>
 
 const int R_e = 6371000; //exemplary radius of the Earth
 
@@ -7,7 +8,7 @@ const int R_e = 6371000; //exemplary radius of the Earth
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
-    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
 
@@ -29,7 +30,7 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_s >0) or !(R >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     float k_ = k(h_a, h_s, R);
@@ -52,7 +53,7 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
 }
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_s >=0) or !(R >=0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     //formula 2.9
@@ -75,7 +76,7 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
 }
 
 float AveragePAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >0) or !(h_a >0) or !(h_a >0)){
+    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     //formula 2.9
@@ -151,12 +152,10 @@ void AverageP::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
     atmosphere = std::move(model);
 }
 
-
 void AverageKAnalytical::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
     std::unique_ptr<ExponentialModel> model_exp(new ExponentialModel());
     atmosphere = std::move(model_exp);
 }
-
 
 void AveragePAnalytical::SetAtmosphere(std::unique_ptr<AtmosphericModel> model){
     std::unique_ptr<ExponentialModel> model_exp(new ExponentialModel());
