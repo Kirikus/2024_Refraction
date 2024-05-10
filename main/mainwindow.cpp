@@ -4,10 +4,8 @@
 
 void setValidators(Ui::MainWindow *ui)
 {
-    ui->line_rad_earth_common->setValidator(new QIntValidator(5000000, 7000000));
     ui->line_Ha_common->setValidator(new QIntValidator(-1000, 27000));
     ui->line_hs_common->setValidator(new QIntValidator(-1000, 27000));
-    ui->line_stepintegr_common->setValidator(new QDoubleValidator(0, 100, 2));
 };
 
 
@@ -31,25 +29,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::extractDataFromGui()
 {
-    radius_earth = ui->line_rad_earth_common->text().toDouble();
-    integr_step = ui->line_stepintegr_common->text().toDouble();
     h_a = ui->line_Ha_common->text().toDouble();
     h_s = ui->line_hs_common->text().toDouble();
     r_refr_dir = ui->line_r_refr->text().toDouble();
-    r_refr_rev = ui->line_r_refr_rev->text().toDouble();
-    psi_d_refr_rev = ui->line_psid_refr_rev->text().toDouble();
     ns_unite = ui->line_Ns_unite->text().toDouble();
     ns_unite_rev = ui->line_Ns_unite_rev->text().toDouble();
     ns_segm = ui->line_Ns_segm->text().toDouble();
     ns_segm_rev = ui->line_Ns_segm_rev->text().toDouble();
-    n1_segm = ui->line_N1_segm->text().toDouble();
-    n1_segm_rev = ui->line_N1_segm_rev->text().toDouble();
-    nb_unite = ui->line_Nb_unite->text().toDouble();
-    nb_unite_rev = ui->line_Nb_unite_rev->text().toDouble();
-    hb_unite = ui->line_Hb_unite->text().toDouble();
-    hb_unite_rev = ui->line_Hb_unite_rev->text().toDouble();
-    hlayer_unite = ui->line_Hlayer_unite->text().toDouble();
-    hlayer_unite_rev = ui->line_Hlayer_unite_rev->text().toDouble();
 
 
     refraction_model = ui->comboBox->currentText();
@@ -68,25 +54,13 @@ void MainWindow::loggingDataFromGui()
     ui->LogText->append(QString("refraction_model_reverse: " + refraction_model_reverse));
     ui->LogText->append(QString("ratmosphere_model: " + atmosphere_model));
     ui->LogText->append(QString("atmosphere_model_reverse: " + atmosphere_model_reverse + "\n"));
-    ui->LogText->append(QString("radius_earth: " + QString::number(radius_earth, 'f', 1)));
-    ui->LogText->append(QString("integr_step: " + QString::number(integr_step, 'f', 1)));
     ui->LogText->append(QString("h_a: " + QString::number(h_a, 'f', 1)));
     ui->LogText->append(QString("h_s: " + QString::number(h_s, 'f', 1)));
     ui->LogText->append(QString("r_refr_dir: " + QString::number(r_refr_dir, 'f', 1)));
-    ui->LogText->append(QString("r_refr_rev: " + QString::number(r_refr_rev, 'f', 1)));
-    ui->LogText->append(QString("psi_d_refr_rev: " + QString::number(psi_d_refr_rev, 'f', 1)));
     ui->LogText->append(QString("ns_unite: " + QString::number(ns_unite, 'f', 1)));
     ui->LogText->append(QString("ns_unite_rev: " + QString::number(ns_unite_rev, 'f', 1)));
     ui->LogText->append(QString("ns_segm: " + QString::number(ns_segm, 'f', 1)));
     ui->LogText->append(QString("ns_segm_rev: " + QString::number(ns_segm_rev, 'f', 1)));
-    ui->LogText->append(QString("n1_segm: " + QString::number(n1_segm, 'f', 1)));
-    ui->LogText->append(QString("n1_segm_rev: " + QString::number(n1_segm_rev, 'f', 1)));
-    ui->LogText->append(QString("nb_unite: " + QString::number(nb_unite, 'f', 1)));
-    ui->LogText->append(QString("nb_unite_rev: " + QString::number(nb_unite_rev, 'f', 1)));
-    ui->LogText->append(QString("hb_unite: " + QString::number(hb_unite, 'f', 1)));
-    ui->LogText->append(QString("hb_unite_rev: " + QString::number(hb_unite_rev, 'f', 1)));
-    ui->LogText->append(QString("hlayer_unite: " + QString::number(hlayer_unite, 'f', 1)));
-    ui->LogText->append(QString("hlayer_unite_rev: " + QString::number(hlayer_unite_rev, 'f', 1)));
     std::cout<<"logging: OK\n";
 };
 
@@ -207,40 +181,70 @@ std::unique_ptr<AtmosphericModel> MainWindow::chooseAtmosphericModelDir()
 {
     if(atmosphere_model == "сегментированная модель")
     {
-        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new SegmentedModel());
-        return atmosphereModel_dir;
+        if(ns_segm<50)
+        {
+        SegmentedModel* model = new SegmentedModel(324.8, h_s);
+        std::unique_ptr<AtmosphericModel> atmosphereModel(model);
+        return atmosphereModel;
+        }
+
+        else
+        {
+        SegmentedModel* model = new SegmentedModel(ns_segm, h_s);
+        std::unique_ptr<AtmosphericModel> atmosphereModel(model);
+        return atmosphereModel;
+        }
     }
-    else if(atmosphere_model == "модель ГОСТ 4401-81")
+    else if(atmosphere_model_reverse == "модель ГОСТ 4401-81")
     {
         CubicSpline cs_p = CubicSpline(ssm_direct.Heights, ssm_direct.Pressures);
         Linear l_t = Linear(ssm_direct.Heights, ssm_direct.Temperatures);
-        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new GOSTModel<CubicSpline, Linear>(cs_p, l_t));
-        return atmosphereModel_dir;
+        std::unique_ptr<AtmosphericModel> atmosphereModel(new GOSTModel<CubicSpline, Linear>(cs_p, l_t));
+        return atmosphereModel;
     }
     else
     {
-        std::unique_ptr<AtmosphericModel> atmosphereModel_dir(new ExponentialModel());
-        return atmosphereModel_dir;
+        ExponentialModel* model = new ExponentialModel(ns_unite, h_s);
+        if(ns_unite<50)
+            model->Ns = 324.8;
+        std::unique_ptr<AtmosphericModel> atmosphereModel(model);
+        return atmosphereModel;
     }
 };
 
 std::unique_ptr<AtmosphericModel> MainWindow::chooseAtmosphericModelRev()
 {
-    if(atmosphere_model == "сегментированная модель")
+    if(atmosphere_model_reverse == "сегментированная модель")
     {
-        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new SegmentedModel());
+        if(ns_segm_rev<50)
+        {
+        SegmentedModel* model = new SegmentedModel(324.8, h_s);
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(model);
         return atmosphereModel_rev;
+        }
+
+        else
+        {
+        SegmentedModel* model = new SegmentedModel(ns_segm_rev, h_s);
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(model);
+        return atmosphereModel_rev;
+        }
     }
-    else if(atmosphere_model == "модель ГОСТ 4401-81")
+    else if(atmosphere_model_reverse == "модель ГОСТ 4401-81")
     {
-        CubicSpline cs_p = CubicSpline(ssm_direct.Heights, ssm_direct.Pressures);
-        Linear l_t = Linear(ssm_direct.Heights, ssm_direct.Temperatures);
+        if (!ssm_reversed.Heights[0])
+            ssm_reversed=ssm_direct;
+        CubicSpline cs_p = CubicSpline(ssm_reversed.Heights, ssm_reversed.Pressures);
+        Linear l_t = Linear(ssm_reversed.Heights, ssm_reversed.Temperatures);
         std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new GOSTModel<CubicSpline, Linear>(cs_p, l_t));
         return atmosphereModel_rev;
     }
     else
     {
-        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(new ExponentialModel());
+        ExponentialModel* model = new ExponentialModel(ns_unite_rev, h_s);
+        if(ns_unite_rev<50)
+            model->Ns = 324.8;
+        std::unique_ptr<AtmosphericModel> atmosphereModel_rev(model);
         return atmosphereModel_rev;
     }
 };
@@ -273,18 +277,18 @@ RefractionModel* MainWindow::chooseRefractionModelDir()
 
 RefractionModel* MainWindow::chooseRefractionModelRev()
 {
-    if(refraction_model == "эфф.радиус 4/3 (прямая)")
+    if(refraction_model_reverse == "эфф.радиус 4/3 (прямая)")
     {
         FourThirds* refractionModel_rev = new FourThirds;
         return refractionModel_rev;
     }
-    else if(refraction_model == "ср.знач. k (прямая)")
+    else if(refraction_model_reverse == "ср.знач. k (прямая)")
     {
         AverageK* refractionModel_rev = new AverageK;
         refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
         return refractionModel_rev;
     }
-    else if(refraction_model == "ср.зн. R кривизны (прямая)")
+    else if(refraction_model_reverse == "ср.зн. R кривизны (прямая)")
     {
         AverageP* refractionModel_rev = new AverageP;
         refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
