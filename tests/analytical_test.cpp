@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_SUITE(test_angles_exponential_model_atmosphere)
 BOOST_AUTO_TEST_CASE(plot_2_34) {
     // Plot 2.34 from booklet
     int argc = 1;
-    char *argv[] = {"Differences in the angles of declination and sliding calculated for different atmospheric parameters"};
+    char *argv[] = {"Differences in the angles of declination and sliding calculated for different atmospheric parameters of Exponential Model"};
     QApplication a(argc, argv);
 
     QCustomPlot customPlot;
