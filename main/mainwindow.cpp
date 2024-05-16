@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->file_gialog_button_gost_4, &QPushButton::clicked, this, &MainWindow::stateStandartHandlerRev);
 
   ui->graph->hide();
+  QList sizes = {1, 0};
+  ui->splitter->setSizes(sizes);
 }
 
 void MainWindow::extractDataFromGui()
@@ -159,14 +161,14 @@ void MainWindow::launchCalculation()
     std::cout<<h_a<<" "<<h_s<<" "<<d<<" "<<psi_d<<"\n";
     float h_s_guess = refractionModel_rev->reverse(h_a, h_s, d, psi_d);
     ui->ResultsText->clear();
-    ui->ResultsText->append("Input data: \n    h_a = " + QString::number(h_a) +
-                            "\n    h_s = " + QString::number(h_s) +
-                            "\n    R = " + QString::number(r_refr_dir));
-    ui->ResultsText->append("Direct task result: \n    psi_d = " +
-                         QString::number(resultCalculationDirect.psi_d) + "\n    d = " +
-                         QString::number(resultCalculationDirect.d) + "\n    psi_g = " +
+    ui->ResultsText->append("    Input data: \n    h_a = " + QString::number(h_a) +
+                            "\n      h_s = " + QString::number(h_s) +
+                            "\n      R = " + QString::number(r_refr_dir));
+    ui->ResultsText->append("    Direct task result: \n      psi_d = " +
+                         QString::number(resultCalculationDirect.psi_d) + "\n      d = " +
+                         QString::number(resultCalculationDirect.d) + "\n      psi_g = " +
                          QString::number(resultCalculationDirect.psi_g) + "\n" +
-                         "Reversed task result: \n    h_guess = " +
+                         "    Reversed task result: \n      h_guess = " +
                          QString::number(h_s_guess)
                         );
     drawGraph(resultCalculationDirect, h_s_guess);
