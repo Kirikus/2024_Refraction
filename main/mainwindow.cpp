@@ -18,13 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
   this->resize(screenGeometry.width() * 0.75, screenGeometry.height() * 0.95);
 
   setValidators(ui);
-
-  connect(ui->main_launch_button, &QPushButton::clicked, this, &MainWindow::launchCalculation);
   connect(ui->action_run_calculate, &QAction::triggered, this, &MainWindow::launchCalculation);
   connect(ui->file_dialog_button_gost, &QPushButton::clicked, this, &MainWindow::stateStandartHandler);
   connect(ui->file_gialog_button_gost_4, &QPushButton::clicked, this, &MainWindow::stateStandartHandlerRev);
 
   ui->graph->hide();
+  QList sizes = {1, 0};
+  ui->splitter->setSizes(sizes);
+
 }
 
 void MainWindow::extractDataFromGui()
@@ -73,6 +74,13 @@ void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_g
     // Очищаем предыдущие графики
     customPlot->clearGraphs();
 
+    // Включаем интерактивные возможности масштабирования и перемещения графика
+    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
+    // Добавляем функциональность приближения колесом мыши
+    customPlot->axisRect()->setRangeDrag(Qt::Horizontal | Qt::Vertical);
+    customPlot->axisRect()->setRangeZoom(Qt::Horizontal | Qt::Vertical);
+
     double x_rls = 0;
     double d = resultCalculationDirect.d;
     double x_target = qSqrt(d*d - (h_a-h_s)*(h_a-h_s)); // Координата цели
@@ -96,45 +104,48 @@ void MainWindow::drawGraph(calculate_answer resultCalculationDirect, float h_s_g
     customPlot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 8));
     customPlot->graph(1)->addData(x_target, h_s);
 
-    // Создаем график для отрезка между точками
+    /*// Создаем график для отрезка между точками
     customPlot->addGraph();
     customPlot->graph(2)->setPen(QPen(Qt::blue));
     customPlot->graph(2)->setLineStyle(QCPGraph::lsLine);
-    customPlot->graph(2)->addData(QVector<double>() << x_rls << x_target, QVector<double>() << h_a << h_s);
+    customPlot->graph(2)->addData(QVector<double>() << x_rls << x_target, QVector<double>() << h_a << h_s);*/
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_d от точки РЛС
     double dx_rls = x_target - x_rls;
     double dy_rls = h_s - h_a;
-    double x_rls_end = x_rls + 0.1*(dx_rls*std::cos(resultCalculationDirect.psi_d) - dy_rls * std::sin(resultCalculationDirect.psi_d));
-    double h_a_end = h_a + 0.1*(dx_rls*std::sin(resultCalculationDirect.psi_d) + dy_rls * std::cos(resultCalculationDirect.psi_d));
-    ui->LogText->append(QString::number(dx_rls) + " " + QString::number(dy_rls));
-    ui->LogText->append(QString::number(resultCalculationDirect.d));
+    double norm_rls = 0.15 * resultCalculationDirect.d / qSqrt(dx_rls*dx_rls + dy_rls*dy_rls);
+    double x_rls_end = x_rls + norm_rls * (dx_rls * std::cos(resultCalculationDirect.psi_d) - dy_rls * std::sin(resultCalculationDirect.psi_d));
+    double h_a_end = h_a + norm_rls * (dx_rls * std::sin(resultCalculationDirect.psi_d) + dy_rls * std::cos(resultCalculationDirect.psi_d));
 
     // Находим координаты конечной точки отрезка с длиной 0.1 d и углом psi_g от точки цели
     double dx_target = x_rls - x_target;
     double dy_target = h_a - h_s;
-    double x_target_end = x_target + 0.1*(dx_target*std::cos(resultCalculationDirect.psi_g) + dy_target * std::sin(resultCalculationDirect.psi_g));
-    double h_s_end = h_s + 0.1*(-dx_target*std::sin(resultCalculationDirect.psi_g) + dy_target * std::cos(resultCalculationDirect.psi_g));
-    ui->LogText->append(QString::number(dx_target) + " " + QString::number(dy_target));
+    double norm_target = 0.1 * resultCalculationDirect.d / qSqrt(dx_target*dx_target + dy_target*dy_target);
+    double x_target_end = x_target + norm_target * (dx_target * std::cos(resultCalculationDirect.psi_g) + dy_target * std::sin(resultCalculationDirect.psi_g));
+    double h_s_end = h_s + norm_target * (-dx_target * std::sin(resultCalculationDirect.psi_g) + dy_target * std::cos(resultCalculationDirect.psi_g));
 
-    // Создаем график для отрезков с углами psi_d и psi_g
+
+    // Создаем график для отрезка с углом psi_d от точки РЛС
     customPlot->addGraph();
-    customPlot->graph(3)->setPen(QPen(Qt::green));
+    QPen blackPen(Qt::black);
+    blackPen.setWidth(2); // Устанавливаем толщину линии
+    customPlot->graph(2)->setPen(blackPen);
+    customPlot->graph(2)->setLineStyle(QCPGraph::lsLine);
+    customPlot->graph(2)->addData(QVector<double>() << x_rls << x_rls_end, QVector<double>() << h_a << h_a_end);
+
+    // Создаем график для отрезка с углом psi_g от точки цели
+    customPlot->addGraph();
+    customPlot->graph(3)->setPen(blackPen);
     customPlot->graph(3)->setLineStyle(QCPGraph::lsLine);
-    customPlot->graph(3)->addData(QVector<double>() << x_rls << x_rls_end, QVector<double>() << h_a << h_a_end);
-
-    customPlot->addGraph();
-    customPlot->graph(4)->setPen(QPen(Qt::black));
-    customPlot->graph(4)->setLineStyle(QCPGraph::lsLine);
-    customPlot->graph(4)->addData(QVector<double>() << x_target << x_target_end, QVector<double>() << h_s << h_s_end);
+    customPlot->graph(3)->addData(QVector<double>() << x_target << x_target_end, QVector<double>() << h_s << h_s_end);
 
 
     // Создаем график для расчётных точек цели
     customPlot->addGraph();
-    customPlot->graph(5)->setPen(QPen(Qt::blue));
-    customPlot->graph(5)->setLineStyle(QCPGraph::lsNone);
-    customPlot->graph(5)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 8));
-    customPlot->graph(5)->addData(x_target, h_s_guess);
+    customPlot->graph(4)->setPen(QPen(Qt::blue));
+    customPlot->graph(4)->setLineStyle(QCPGraph::lsNone);
+    customPlot->graph(4)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 8));
+    customPlot->graph(4)->addData(x_target, h_s_guess);
 
     // Перерисовываем график
     customPlot->replot();
@@ -161,14 +172,14 @@ void MainWindow::launchCalculation()
     std::cout<<h_a<<" "<<h_s<<" "<<d<<" "<<psi_d<<"\n";
     float h_s_guess = refractionModel_rev->reverse(h_a, h_s, d, psi_d);
     ui->ResultsText->clear();
-    ui->ResultsText->append("Input data: \n    h_a = " + QString::number(h_a) +
-                            "\n    h_s = " + QString::number(h_s) +
-                            "\n    R = " + QString::number(r_refr_dir));
-    ui->ResultsText->append("Direct task result: \n    psi_d = " +
-                         QString::number(resultCalculationDirect.psi_d) + "\n    d = " +
-                         QString::number(resultCalculationDirect.d) + "\n    psi_g = " +
+    ui->ResultsText->append("    Input data: \n    h_a = " + QString::number(h_a) +
+                            "\n      h_s = " + QString::number(h_s) +
+                            "\n      R = " + QString::number(r_refr_dir));
+    ui->ResultsText->append("    Direct task result: \n      psi_d = " +
+                         QString::number(resultCalculationDirect.psi_d) + "\n      d = " +
+                         QString::number(resultCalculationDirect.d) + "\n      psi_g = " +
                          QString::number(resultCalculationDirect.psi_g) + "\n" +
-                         "Reversed task result: \n    h_guess = " +
+                         "    Reversed task result: \n      h_guess = " +
                          QString::number(h_s_guess)
                         );
     drawGraph(resultCalculationDirect, h_s_guess);
@@ -251,18 +262,18 @@ std::unique_ptr<AtmosphericModel> MainWindow::chooseAtmosphericModelRev()
 
 RefractionModel* MainWindow::chooseRefractionModelDir()
 {
-    if(refraction_model == "эфф.радиус 4/3 (прямая)")
+    if(refraction_model == "эфф.радиус 4/3")
     {
         FourThirds* refractionModel_dir = new FourThirds;
         return refractionModel_dir;
     }
-    else if(refraction_model == "ср.знач. k (прямая)")
+    else if(refraction_model == "ср.знач. k")
     {
         AverageK* refractionModel_dir = new AverageK;
         refractionModel_dir->SetAtmosphere(chooseAtmosphericModelDir());
         return refractionModel_dir;
     }
-    else if(refraction_model == "ср.зн. R кривизны (прямая)")
+    else if(refraction_model == "ср.зн. R кривизны")
     {
         AverageP* refractionModel_dir = new AverageP;
         refractionModel_dir->SetAtmosphere(chooseAtmosphericModelDir());
@@ -277,18 +288,18 @@ RefractionModel* MainWindow::chooseRefractionModelDir()
 
 RefractionModel* MainWindow::chooseRefractionModelRev()
 {
-    if(refraction_model_reverse == "эфф.радиус 4/3 (прямая)")
+    if(refraction_model_reverse == "эфф.радиус 4/3")
     {
         FourThirds* refractionModel_rev = new FourThirds;
         return refractionModel_rev;
     }
-    else if(refraction_model_reverse == "ср.знач. k (прямая)")
+    else if(refraction_model_reverse == "ср.знач. k")
     {
         AverageK* refractionModel_rev = new AverageK;
         refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
         return refractionModel_rev;
     }
-    else if(refraction_model_reverse == "ср.зн. R кривизны (прямая)")
+    else if(refraction_model_reverse == "ср.зн. R кривизны")
     {
         AverageP* refractionModel_rev = new AverageP;
         refractionModel_rev->SetAtmosphere(chooseAtmosphericModelRev());
