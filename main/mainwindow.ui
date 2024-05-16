@@ -140,7 +140,7 @@
                  <rect>
                   <x>10</x>
                   <y>0</y>
-                  <width>811</width>
+                  <width>831</width>
                   <height>281</height>
                  </rect>
                 </property>
@@ -215,7 +215,7 @@
                  <rect>
                   <x>10</x>
                   <y>0</y>
-                  <width>401</width>
+                  <width>831</width>
                   <height>281</height>
                  </rect>
                 </property>
@@ -229,17 +229,7 @@
                  <property name="verticalSpacing">
                   <number>10</number>
                  </property>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="N_s_8">
-                   <property name="toolTip">
-                    <string>приповерхностный индекс преломления</string>
-                   </property>
-                   <property name="text">
-                    <string> N_s</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
+                 <item row="1" column="1">
                   <spacer name="verticalSpacer_14">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
@@ -253,31 +243,12 @@
                   </spacer>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="line_Ns_segm"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="N_1">
+                  <widget class="QLineEdit" name="line_Ns_segm">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>индекс преломления на 1 км</string>
-                   </property>
-                   <property name="text">
-                    <string> N_1</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="line_N1_segm"/>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="label_17">
-                   <property name="text">
-                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -287,6 +258,29 @@
                     <string/>
                    </property>
                   </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="N_s_8">
+                   <property name="toolTip">
+                    <string>приповерхностный индекс преломления</string>
+                   </property>
+                   <property name="text">
+                    <string> N_s</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -303,7 +297,7 @@
                  <rect>
                   <x>10</x>
                   <y>0</y>
-                  <width>401</width>
+                  <width>831</width>
                   <height>281</height>
                  </rect>
                 </property>
@@ -322,6 +316,12 @@
                  </property>
                  <item row="0" column="1">
                   <widget class="QPushButton" name="file_dialog_button_gost">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>Открыть</string>
                    </property>
@@ -463,7 +463,7 @@
                    <rect>
                     <x>10</x>
                     <y>0</y>
-                    <width>811</width>
+                    <width>831</width>
                     <height>281</height>
                    </rect>
                   </property>
@@ -538,7 +538,7 @@
                    <rect>
                     <x>10</x>
                     <y>0</y>
-                    <width>401</width>
+                    <width>831</width>
                     <height>281</height>
                    </rect>
                   </property>
@@ -552,36 +552,17 @@
                    <property name="verticalSpacing">
                     <number>10</number>
                    </property>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="N_s_38">
-                     <property name="toolTip">
-                      <string>приповерхностный индекс преломления</string>
-                     </property>
-                     <property name="text">
-                      <string> N_s</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="N_4">
+                   <item row="0" column="1">
+                    <widget class="QLineEdit" name="line_Ns_segm_rev">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
                      </property>
-                     <property name="toolTip">
-                      <string>индекс преломления на 1 км</string>
-                     </property>
-                     <property name="text">
-                      <string> N_1</string>
-                     </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QLineEdit" name="line_Ns_segm_rev"/>
-                   </item>
-                   <item row="2" column="1">
+                   <item row="1" column="1">
                     <spacer name="verticalSpacer_62">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -594,9 +575,6 @@
                      </property>
                     </spacer>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QLineEdit" name="line_N1_segm_rev"/>
-                   </item>
                    <item row="0" column="2">
                     <widget class="QLabel" name="label_9">
                      <property name="text">
@@ -604,12 +582,28 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="2">
-                    <widget class="QLabel" name="label_10">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="N_s_38">
+                     <property name="toolTip">
+                      <string>приповерхностный индекс преломления</string>
+                     </property>
                      <property name="text">
-                      <string/>
+                      <string> N_s</string>
                      </property>
                     </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <spacer name="horizontalSpacer_6">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -626,7 +620,7 @@
                    <rect>
                     <x>10</x>
                     <y>0</y>
-                    <width>401</width>
+                    <width>831</width>
                     <height>281</height>
                    </rect>
                   </property>
@@ -645,6 +639,12 @@
                    </property>
                    <item row="0" column="1">
                     <widget class="QPushButton" name="file_gialog_button_gost_4">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="text">
                       <string>Открыть</string>
                      </property>
