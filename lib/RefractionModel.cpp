@@ -8,7 +8,7 @@ const int R_e = 6371000; //exemplary radius of the Earth
 calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
     // all formulas were taken from the manual pages 37-38
     //formulas 2.8
-    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
+    if (!(h_a >=-R_e) or !(h_s >=-R_e) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
 
@@ -30,7 +30,7 @@ calculate_answer GeometricLine::calculate(float h_a, float h_s, float R){
 }
 
 calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
-    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
+    if (!(h_a >=-R_e) or !(h_s >=-R_e) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
     float k_ = k(h_a, h_s, R);
@@ -53,22 +53,23 @@ calculate_answer EffectiveRadius::calculate(float h_a, float h_s, float R){
 }
 
 float AverageKAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
+    if (!(h_a >=-R_e) or !(h_s >=-R_e) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
+    /*
     //formula 2.9
     float term1 = h_a / R;
     float term2 = 1 + h_a / (2 * R_e);
     float term3 = R / (2 * R_e);
     float psi_g = asin(term1 * term2 - term3);
-
+*/
     //formula 2.38
     double H_b = atmosphere->Hb(); //Hb
     double N_s = atmosphere->N(h_s); //Ns // затычка для h, вопрос по использованию так как в
     double term4 = H_b / (h_a - h_s);
-    double term4_5 = ((pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b);
+    double term4_5 = ((pow(10, -6) * N_s * 1 * R_e) / H_b);
     double term5 = exp((h_a - h_s) / H_b) - term4_5;
-    double term6 = (pow(10, -6) * N_s * cos(psi_g) * R_e) / H_b;
+    double term6 = (pow(10, -6) * N_s * 1 * R_e) / H_b;
     double term7 = 1 - term6;
     double k_avg = term4 * log(term5 / term7);
 
@@ -76,19 +77,20 @@ float AverageKAnalytical::k(float h_a, float h_s, float R){
 }
 
 float AveragePAnalytical::k(float h_a, float h_s, float R){
-    if (!(h_a >=0) or !(h_s >=0) or !(R >=0)){
+    if (!(h_a >=-R_e) or !(h_s >=-R_e) or !(R >=0)){
         std::cerr<<"incorrect values supplied"<<std::endl;
     }
+    /*
     //formula 2.9
     float term1 = h_a / R;
     float term2 = 1 + h_a / (2 * R_e);
     float term3 = R / (2 * R_e);
     float psi_g = asin(term1 * term2 - term3);
-
-    double H_b = atmosphere->Hb(); //Hb
-    double N_s = atmosphere->N(h_s); //Ns // затычка для h, вопрос по использованию так как в
+*/
+    double H_b = atmosphere->Hb();
+    double N_s = atmosphere->N(h_s);
     //formula 2.39
-    float term4 = H_b / (pow(10, -6) * N_s * cos(psi_g));
+    float term4 = H_b / (pow(10, -6) * N_s * 1);
     float term5 = exp((h_a - h_s) / H_b) - 1;
     float term6 = (h_a - h_s) / H_b;
     float p_avg = term4 * (term5 / term6);
