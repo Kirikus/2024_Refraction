@@ -982,18 +982,12 @@
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuRun">
     <property name="title">
      <string>Run</string>
     </property>
     <addaction name="action_run_calculate"/>
    </widget>
-   <addaction name="menuFile"/>
    <addaction name="menuRun"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
