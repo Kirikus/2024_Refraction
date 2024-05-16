@@ -18,8 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
   this->resize(screenGeometry.width() * 0.75, screenGeometry.height() * 0.95);
 
   setValidators(ui);
-
-  connect(ui->main_launch_button, &QPushButton::clicked, this, &MainWindow::launchCalculation);
   connect(ui->action_run_calculate, &QAction::triggered, this, &MainWindow::launchCalculation);
   connect(ui->file_dialog_button_gost, &QPushButton::clicked, this, &MainWindow::stateStandartHandler);
   connect(ui->file_gialog_button_gost_4, &QPushButton::clicked, this, &MainWindow::stateStandartHandlerRev);
