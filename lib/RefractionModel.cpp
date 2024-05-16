@@ -103,7 +103,6 @@ float AverageP::k(float h_a, float h_s, float R){
     float determ = ( (atmosphere -> N(h_a + dh)) - (atmosphere -> N(h_a)))/dh;
     float ro = (atmosphere -> N(h_a)) / determ;
     float k = 1 / (1 - (R_e/ro) );
-    std::cout<<k<<std::endl;
     return k;
 }
 
@@ -113,7 +112,7 @@ float RefractionModel::reverse(float h_a, float h_s_guess, float R, float psi_d)
 
     float angle_real = psi_d;
 
-    for (int iter = 0; iter<50; iter++){
+    for (int iter = 0; iter<500; iter++){
         calculate_answer res_plus = calculate(h_a, (h_s + d_h), R);
         calculate_answer res_minus = calculate(h_a, h_s - d_h, R);
         float angle_plus = res_plus.psi_d;
@@ -122,11 +121,12 @@ float RefractionModel::reverse(float h_a, float h_s_guess, float R, float psi_d)
         float angle = (angle_minus + angle_plus) / 2;
 
         float error = fabs(angle_real - angle);
-        if (error < 1/100000)
-           return h_s;
+        if (error < 1e-7)
+
+            return h_s;
 
         float derivattive = (angle_plus + angle_minus) / (2 * d_h);
-        h_s = h_s + error / derivattive;
+        h_s = h_s + 10 * error / derivattive;
     }
 
     return h_s;
