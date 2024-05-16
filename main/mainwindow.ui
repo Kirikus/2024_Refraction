@@ -39,7 +39,7 @@
        </widget>
        <widget class="QTabWidget" name="TabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="DirectProblem">
          <attribute name="title">
@@ -633,7 +633,7 @@
                       <string>приповерхностный индекс преломления</string>
                      </property>
                      <property name="text">
-                      <string> N_s</string>
+                      <string>Приповерхностный индекс преломления</string>
                      </property>
                     </widget>
                    </item>
