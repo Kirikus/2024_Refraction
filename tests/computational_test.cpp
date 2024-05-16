@@ -1,6 +1,7 @@
 #include <QApplication>
 
-#include "../lib/analytical.h"
+#include "../lib/computational.h"
+#include "../lib/segmented_model.h"
 #include "qcustomplot.h"
 
 #if !defined(WIN32)
@@ -10,13 +11,13 @@
 
 namespace tt = boost::test_tools;
 
-BOOST_AUTO_TEST_SUITE(test_angles_exponential_model_atmosphere)
+BOOST_AUTO_TEST_SUITE(test_angles_segmented_model_atmosphere)
 
 #ifdef TEST_PLOTS
 BOOST_AUTO_TEST_CASE(plot_2_34) {
     // Plot 2.34 from booklet
     int argc = 1;
-    char *argv[] = {"Differences in the angles of declination and sliding calculated for different atmospheric parameters of Exponential Model"};
+    char *argv[] = {"Differences in the angles of declination and sliding calculated for different atmospheric parameters of Segmented Model"};
     QApplication a(argc, argv);
 
     QCustomPlot customPlot;
@@ -29,8 +30,8 @@ BOOST_AUTO_TEST_CASE(plot_2_34) {
 
 
     for (int k = 0; k < Ns_values.size(); ++k){
-        ExponentialModel exp_model(Ns_values[k], hs);
-        Analytical testAnalytical(exp_model);
+        SegmentedModel seg_model(Ns_values[k], hs);
+        Computational testComputational(seg_model);
 
         const int N = 100;
         const double h_min = 0, h_max = 30000;
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(plot_2_34) {
             for (int i = 0; i < N; ++i) {
                 customPlot.graph(j + k * 6)->setPen(QPen(colors[j], 2,  lines[k]));
                 y[i] = h_min + i * (h_max - h_min) / (N - 1);
-                x[i] = abs(testAnalytical.psi_d(angles[j], y[i], hs) - angles[j]) * 180 / M_PI;
+                x[i] = abs(testComputational.psi_d(angles[j], y[i], hs) - angles[j]) * 180 / M_PI;
             }
             customPlot.graph(j + k * 6)->setData(x, y);
             customPlot.graph(j + k * 6)->setName("psi_g  = " + QString::number(angles[j] * 180 / M_PI) + " at "+ QString::number(Ns_values[k]));

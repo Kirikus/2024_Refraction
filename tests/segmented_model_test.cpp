@@ -64,9 +64,9 @@ BOOST_AUTO_TEST_CASE(plot_2_32) {
     customPlot.xAxis->setLabel("Refractive index N, []");
     customPlot.yAxis->setLabel("Height, [m]");
 
-    // let the ranges scale themselves so graph 0 fits perfectly in the visible
+    // let the ranges scale themselves so graph 2 fits perfectly in the visible
     // area:
-    customPlot.graph(0)->rescaleAxes();
+    customPlot.graph(2)->rescaleAxes();
     // Note: we could have also just called customPlot->rescaleAxes(); instead
     // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select
     // graphs by clicking:

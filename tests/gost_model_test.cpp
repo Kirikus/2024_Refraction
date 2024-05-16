@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(N_at_8000m_continuous) {
 }
 
 #ifdef TEST_PLOTS
-BOOST_AUTO_TEST_CASE(plot_dummy) {
+BOOST_AUTO_TEST_CASE(plot_2_31) {
   // Plot 2.31 from booklet
   int argc = 1;
   char *argv[] = {"The dependence of the water vapor density on height for GOST Model"};
