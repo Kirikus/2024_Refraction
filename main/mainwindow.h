@@ -36,25 +36,13 @@ class MainWindow : public QMainWindow {
 
  private:
   Ui::MainWindow *ui;
-  double radius_earth;
-  double integr_step;
   double h_a;
   double h_s;
   double r_refr_dir;
-  double r_refr_rev;
-  double psi_d_refr_rev;
   double ns_unite;
   double ns_unite_rev;
   double ns_segm;
   double ns_segm_rev;
-  double n1_segm;
-  double n1_segm_rev;
-  double nb_unite;
-  double nb_unite_rev;
-  double hb_unite;
-  double hb_unite_rev;
-  double hlayer_unite;
-  double hlayer_unite_rev;
   QString refraction_model;
   QString refraction_model_reverse;
   QString atmosphere_model;
@@ -67,6 +55,10 @@ class MainWindow : public QMainWindow {
   void loggingDataFromGui();
   void drawGraph(calculate_answer resultCalculation, float h_s_guess);
   stateStandartModelData fillFromFile(const QString &fileName);
+  std::unique_ptr<AtmosphericModel> chooseAtmosphericModelDir ();
+  std::unique_ptr<AtmosphericModel> chooseAtmosphericModelRev ();
+  RefractionModel* chooseRefractionModelDir ();
+  RefractionModel* chooseRefractionModelRev ();
 
 };
 #endif  // MAINWINDOW_H
